@@ -22,7 +22,7 @@ export default function Login() {
       <iframe
         ref={iframeRef}
         className="w-full h-full"
-        src="http://localhost:3001/login"
+        src={`${process.env.NEXT_PUBLIC_SSO_URL}/login`}
         style={{ border: "1px solid black" }}
       ></iframe>
     </div>
