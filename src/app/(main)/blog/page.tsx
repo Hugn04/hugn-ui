@@ -1,10 +1,12 @@
 import BlogCard from "@/components/BlogCard";
 import BlogCategories from "@/components/BlogCategories";
 import BlogHero from "@/components/BlogHero";
+import { blogPost } from "@/types/blogPost";
+import { Categories } from "@/types/categories";
 import Link from "next/link";
 
 // Sample blog data - trong thực tế sẽ fetch từ API hoặc CMS
-const blogPosts = [
+const blogPosts: blogPost[] = [
   {
     id: 1,
     title: "10 Xu hướng thiết kế Web năm 2025",
@@ -109,7 +111,7 @@ const blogPosts = [
   },
 ];
 
-const categories = [
+const categories: Categories[] = [
   { name: "Tất cả", count: blogPosts.length, active: true },
   { name: "Thiết kế", count: 12, active: false },
   { name: "Development", count: 8, active: false },

@@ -1,7 +1,16 @@
+import { blogPost } from "@/types/blogPost";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function BlogCard({ post, featured = false, delay = 0 }) {
+export default function BlogCard({
+  post,
+  featured = false,
+  delay = 0,
+}: {
+  post: blogPost;
+  featured: boolean;
+  delay: number;
+}) {
   return (
     <article
       className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-[fadeInUp_0.8s_ease-out_${delay}ms_both] ${

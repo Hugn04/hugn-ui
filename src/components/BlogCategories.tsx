@@ -1,10 +1,15 @@
 "use client";
+import { Categories } from "@/types/categories";
 import { useState } from "react";
 
-export default function BlogCategories({ categories: initialCategories }) {
+export default function BlogCategories({
+  categories: initialCategories,
+}: {
+  categories: Categories[];
+}) {
   const [categories, setCategories] = useState(initialCategories);
 
-  const handleCategoryClick = (clickedCategory) => {
+  const handleCategoryClick = (clickedCategory: Categories) => {
     setCategories(
       categories.map((category) => ({
         ...category,
