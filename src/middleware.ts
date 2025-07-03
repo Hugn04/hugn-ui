@@ -1,18 +1,26 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
-const PUBLIC_ROUTES = ["/login", "/register", "/about"];
+const PUBLIC_ROUTES = ["/", "/admin", "/login", "/api/pong"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
 
-  const isPublic = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+  const isPublic = PUBLIC_ROUTES.some((route) => {
+    const lastChar = route.slice(-1);
+    if (lastChar === "*") {
+      route = route.slice(0, -2);
+      return pathname.startsWith(route);
+    } else {
+      return pathname === route;
+    }
+  });
   const loginUrl = req.nextUrl.clone();
   loginUrl.pathname = "/login";
 
   if (isPublic) {
-    if (pathname.startsWith("/losgin")) {
+    if (pathname.startsWith("/loágin")) {
       try {
         await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth`, {
           headers: {
@@ -32,7 +40,7 @@ export async function middleware(req: NextRequest) {
     if (token) {
       try {
         const { data: user } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/auth`,
+          `${process.env.NEXT_PUBLIC_API_URL}/auth`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
