@@ -1,18 +1,20 @@
+"use client";
 import Link from "next/link";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
 import type { navItem } from "@/types/navItems";
+import { ModeToggle } from "./ModeToggle";
 export default function Header() {
   const navigationItems: navItem[] = [
     { name: "Trang chủ", href: "/" },
     { name: "Blog", href: "/blog" },
-    { name: "Dịch vụ", href: "/services" },
+    { name: "Mẫu", href: "/template" },
     { name: "Về chúng tôi", href: "/about" },
     { name: "Liên hệ", href: "/contact" },
   ];
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
+    <header className="bg-[var(--background)] border-b-[var(--hover)] border-b-[2] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
@@ -21,7 +23,7 @@ export default function Header() {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
                 <span className="text-white font-bold text-xl">H</span>
               </div>
-              <span className="ml-3 text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+              <span className="ml-3 text-2xl font-bold text-[var(--foreground)] group-hover:text-blue-600 transition-colors duration-200">
                 HUGN
               </span>
             </Link>
@@ -53,6 +55,7 @@ export default function Header() {
             >
               Đăng nhập
             </Link>
+            <ModeToggle></ModeToggle>
           </div>
 
           {/* Mobile menu button */}

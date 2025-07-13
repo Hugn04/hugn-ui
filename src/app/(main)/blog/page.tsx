@@ -1,6 +1,6 @@
 import BlogCard from "@/components/BlogCard";
 import BlogCategories from "@/components/BlogCategories";
-import BlogHero from "@/components/BlogHero";
+// import BlogHero from "@/components/BlogHero";
 import { blogPost } from "@/types/blogPost";
 import { Categories } from "@/types/categories";
 import Link from "next/link";
@@ -109,6 +109,74 @@ const blogPosts: blogPost[] = [
     views: 1340,
     likes: 98,
   },
+  {
+    id: 7,
+    title: "Performance Optimization cho React Apps",
+    excerpt:
+      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
+    content: "Performance là yếu tố quyết định thành công của web app...",
+    author: "Minh Hoàng",
+    authorImage: "/assets/images/author1.jpg",
+    publishDate: "2025-01-03",
+    readTime: "14 phút đọc",
+    category: "Performance",
+    tags: ["React", "Performance", "Optimization", "Web Vitals"],
+    image: "/assets/images/blog6.jpg",
+    featured: false,
+    views: 1340,
+    likes: 98,
+  },
+  {
+    id: 8,
+    title: "Performance Optimization cho React Apps",
+    excerpt:
+      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
+    content: "Performance là yếu tố quyết định thành công của web app...",
+    author: "Minh Hoàng",
+    authorImage: "/assets/images/author1.jpg",
+    publishDate: "2025-01-03",
+    readTime: "14 phút đọc",
+    category: "Performance",
+    tags: ["React", "Performance", "Optimization", "Web Vitals"],
+    image: "/assets/images/blog6.jpg",
+    featured: false,
+    views: 1340,
+    likes: 98,
+  },
+  {
+    id: 9,
+    title: "Performance Optimization cho React Apps",
+    excerpt:
+      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
+    content: "Performance là yếu tố quyết định thành công của web app...",
+    author: "Minh Hoàng",
+    authorImage: "/assets/images/author1.jpg",
+    publishDate: "2025-01-03",
+    readTime: "14 phút đọc",
+    category: "Performance",
+    tags: ["React", "Performance", "Optimization", "Web Vitals"],
+    image: "/assets/images/blog6.jpg",
+    featured: true,
+    views: 1340,
+    likes: 98,
+  },
+  {
+    id: 10,
+    title: "Performance Optimization cho React Apps",
+    excerpt:
+      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
+    content: "Performance là yếu tố quyết định thành công của web app...",
+    author: "Minh Hoàng",
+    authorImage: "/assets/images/author1.jpg",
+    publishDate: "2025-01-03",
+    readTime: "14 phút đọc",
+    category: "Performance",
+    tags: ["React", "Performance", "Optimization", "Web Vitals"],
+    image: "/assets/images/blog6.jpg",
+    featured: true,
+    views: 1340,
+    likes: 98,
+  },
 ];
 
 const categories: Categories[] = [
@@ -126,7 +194,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
       {/* Blog Hero Section */}
-      <BlogHero />
+      {/* <BlogHero /> */}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -196,32 +264,6 @@ export default function BlogPage() {
         </section>
 
         {/* Newsletter Subscription */}
-        <section className="mt-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10 text-center max-w-2xl mx-auto">
-            <h3 className="text-3xl font-bold mb-4">
-              Đăng ký nhận tin tức mới nhất
-            </h3>
-            <p className="text-blue-100 mb-8 text-lg">
-              Nhận những bài viết, tips và xu hướng mới nhất về thiết kế và phát
-              triển web
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Nhập email của bạn"
-                className="flex-1 px-6 py-3 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/25"
-              />
-              <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-colors">
-                Đăng ký
-              </button>
-            </div>
-          </div>
-
-          {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-20 translate-x-20"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-16 -translate-x-16"></div>
-        </section>
       </div>
     </div>
   );

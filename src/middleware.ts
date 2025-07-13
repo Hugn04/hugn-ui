@@ -20,27 +20,27 @@ export async function middleware(req: NextRequest) {
   loginUrl.pathname = "/login";
 
   if (isPublic) {
-    if (pathname.startsWith("/loágin")) {
-      try {
-        await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const homeUrl = req.nextUrl.clone();
-        homeUrl.pathname = "/";
-        return NextResponse.redirect(homeUrl);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        return NextResponse.next();
-      }
-    }
+    // if (pathname.startsWith("/loágin")) {
+    //   try {
+    //     await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/verify`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     const homeUrl = req.nextUrl.clone();
+    //     homeUrl.pathname = "/";
+    //     return NextResponse.redirect(homeUrl);
+    //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //   } catch (error) {
+    //     return NextResponse.next();
+    //   }
+    // }
     return NextResponse.next();
   } else {
     if (token) {
       try {
         const { data: user } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+          `${process.env.NEXT_PUBLIC_API_URL}/verify`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -69,5 +69,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"], // bỏ qua file tĩnh
+  matcher: ["/((?!api|_next/|favicon.ico).*)"],
 };

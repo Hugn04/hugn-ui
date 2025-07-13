@@ -1,11 +1,11 @@
+"use client";
 import Image from "next/image";
 // import AdComponent from "@/components/AdComponent";
-
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
+    <main className="min-h-screen bg-[var(--background)] overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-indigo-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
@@ -29,16 +29,16 @@ export default function Home() {
                   Thiết kế
                 </span>
                 <br />
-                <span className="text-gray-900">không giới hạn</span>
+                <span className="text-[var(--text-color)]">không giới hạn</span>
                 <br />
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-normal text-gray-600">
+                <span className="text-2xl sm:text-3xl lg:text-4xl font-normal ">
                   Tự do sáng tạo
                 </span>
               </h1>
             </div>
 
             {/* Description */}
-            <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-2xl animate-fadeInUp opacity-0 [animation-delay:600ms] [animation-fill-mode:forwards]">
+            <p className="text-lg sm:text-xl  leading-relaxed max-w-2xl animate-fadeInUp opacity-0 [animation-delay:600ms] [animation-fill-mode:forwards]">
               Dành cho những ai không ngại{" "}
               <span className="font-semibold text-blue-600">phá cách</span>.
               Giao diện đậm chất nghệ thuật, mang đến cảm hứng sáng tạo và sự
@@ -107,7 +107,7 @@ export default function Home() {
 
             {/* Main image container */}
             <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
-              <div className="relative overflow-hidden rounded-2xl shadow-xl">
+              <div className="overflow-hidden  ">
                 <Image
                   src="/assets/images/HomeLogo.png"
                   alt="Thiết kế sáng tạo không giới hạn"
