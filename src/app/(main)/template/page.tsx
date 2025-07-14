@@ -446,8 +446,8 @@ type ResizablePanelHandle = {
 };
 
 export default function TemplatePage() {
-  const [code, setCode] = useState(init);
-  console.log(setCode);
+  const [code] = useState(init);
+  //   console.log(setCode);
 
   const panelRef = useRef<ResizablePanelHandle>(null);
   const preViewRef = useRef<ResizablePanelHandle>(null);

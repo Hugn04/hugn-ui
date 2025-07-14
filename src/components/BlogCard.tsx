@@ -1,5 +1,5 @@
 import { blogPost } from "@/types/blogPost";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 
 export default function BlogCard({
@@ -22,13 +22,13 @@ export default function BlogCard({
           featured ? "lg:w-1/2" : "w-full h-48"
         }`}
       >
-        <Image
+        {/* <Image
           src={post.image}
           alt={post.title}
           width={featured ? 400 : 300}
           height={featured ? 300 : 200}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
+        /> */}
 
         {/* Category badge */}
         <div className="absolute top-4 left-4">
@@ -104,13 +104,13 @@ export default function BlogCard({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image
+            {/* <Image
               src={post.authorImage}
               alt={post.author}
               width={32}
               height={32}
               className="w-8 h-8 rounded-full object-cover"
-            />
+            /> */}
             <span className="text-sm text-gray-700 font-medium">
               {post.author}
             </span>

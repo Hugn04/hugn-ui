@@ -82,16 +82,26 @@ export default function Home() {
             {/* Stats */}
             <div className="flex justify-center lg:justify-start gap-8 pt-4 animate-fadeInUp opacity-0 [animation-delay:1000ms] [animation-fill-mode:forwards]">
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-gray-900">10K+</div>
-                <div className="text-sm text-gray-600">Mẫu thiết kế</div>
+                <div className="text-2xl font-bold text-[var(--text-color)]">
+                  10K+
+                </div>
+                <div className="text-sm text-[var(--text-color)]">
+                  Mẫu thiết kế
+                </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-gray-900">5K+</div>
-                <div className="text-sm text-gray-600">Khách hàng</div>
+                <div className="text-2xl font-bold text-[var(--text-color)]">
+                  5K+
+                </div>
+                <div className="text-sm text-[var(--text-color)]">
+                  Khách hàng
+                </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-gray-900">99%</div>
-                <div className="text-sm text-gray-600">Hài lòng</div>
+                <div className="text-2xl font-bold text-[var(--text-color)]">
+                  99%
+                </div>
+                <div className="text-sm text-[var(--text-color)]">Hài lòng</div>
               </div>
             </div>
           </div>

@@ -1,7 +1,6 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import axios, { AxiosError } from "axios";
-const PUBLIC_ROUTES = ["/", "/admin", "/login", "/api/pong"];
+const PUBLIC_ROUTES = ["/", "/admin", "/login", "/template", "/api/pong"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -39,14 +38,20 @@ export async function middleware(req: NextRequest) {
   } else {
     if (token) {
       try {
-        const { data: user } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/verify`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        // Kiểm tra nếu không thành công
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        // Parse JSON
+        const user = await res.json();
         if (user) {
           const requestHeaders = new Headers(req.headers);
           // requestHeaders.set("x-user", JSON.stringify(user));
@@ -55,12 +60,8 @@ export async function middleware(req: NextRequest) {
           });
         }
       } catch (error) {
-        if (error instanceof AxiosError) {
-          console.error("Axios error:", error.message);
-          console.error("Response data:", error.response?.data);
-        } else {
-          console.error("Unexpected error:", error);
-        }
+        console.error("Unexpected error:", error);
+
         return NextResponse.redirect(loginUrl);
       }
     }
@@ -69,5 +70,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };
