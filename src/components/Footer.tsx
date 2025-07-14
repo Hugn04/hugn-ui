@@ -1,12 +1,7 @@
 import Link from "next/link";
 
 export default function Footer() {
-  const navigationItems = [
-    { name: "Trang chủ", href: "/" },
-    { name: "Sản phẩm", href: "/products" },
-    { name: "Dịch vụ", href: "/services" },
-    { name: "Về chúng tôi", href: "/about" },
-  ];
+  const navigationItems = [{ name: "Trang chủ", href: "/" }];
 
   const currentYear = new Date().getFullYear();
 

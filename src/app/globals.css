@@ -20,7 +20,7 @@
 
   --primary: var(--color-blue-600);
   --primary-foreground: oklch(100% 0.00011 271.152);
-  --primary-hover: oklch(97% 0.014 254.604);
+  --primary-hover: oklch(69.56% 0.15913 263.769);
 
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);

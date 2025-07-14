@@ -13,7 +13,7 @@ export default function BlogCard({
 }) {
   return (
     <article
-      className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-[fadeInUp_0.8s_ease-out_${delay}ms_both] ${
+      className={`group bg-[var(--card)] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-[fadeInUp_0.8s_ease-out_${delay}ms_both] ${
         featured ? "lg:flex lg:flex-row" : "flex flex-col"
       }`}
     >
@@ -32,7 +32,7 @@ export default function BlogCard({
 
         {/* Category badge */}
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-full">
+          <span className="px-3 py-1 bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-medium rounded-full">
             {post.category}
           </span>
         </div>
@@ -47,7 +47,7 @@ export default function BlogCard({
         }`}
       >
         <div>
-          <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
+          <div className="flex items-center gap-4 mb-3 text-sm text-[var(--text-color)]">
             <time dateTime={post.publishDate}>
               {new Date(post.publishDate).toLocaleDateString("vi-VN")}
             </time>
@@ -80,7 +80,7 @@ export default function BlogCard({
 
           <Link href={`/blog/${post.id}`}>
             <h3
-              className={`font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 ${
+              className={`font-bold text-[var(--text-color)] mb-3 group-hover:text-[var(--primary)] transition-colors line-clamp-2 ${
                 featured ? "text-2xl" : "text-xl"
               }`}
             >
@@ -88,7 +88,9 @@ export default function BlogCard({
             </h3>
           </Link>
 
-          <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+          <p className="text-[var(--text-color)] mb-4 line-clamp-3">
+            {post.excerpt}
+          </p>
 
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.slice(0, 3).map((tag) => (
@@ -111,12 +113,12 @@ export default function BlogCard({
               height={32}
               className="w-8 h-8 rounded-full object-cover"
             /> */}
-            <span className="text-sm text-gray-700 font-medium">
+            <span className="text-sm text-[var(--text-color)] font-medium">
               {post.author}
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-[var(--text-color)]">
             <button className="flex items-center gap-1 hover:text-red-500 transition-colors">
               <svg
                 className="w-4 h-4"
@@ -136,7 +138,7 @@ export default function BlogCard({
 
             <Link
               href={`/blog/${post.id}`}
-              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 group"
+              className="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium flex items-center gap-1 group"
             >
               Đọc thêm
               <svg

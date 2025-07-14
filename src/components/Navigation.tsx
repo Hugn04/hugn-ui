@@ -15,7 +15,7 @@ export default function Navigation({ items }: { items: navItem[] }) {
             href={item.href}
             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative ${
               isActive
-                ? "text-[var(--primary)] bg-[var(--primary-hover)]"
+                ? "text-[var(--primary)] bg-[var(--primary-foreground)]"
                 : "text-[var(--text-color)] hover:text-[var(--primary)] hover:bg-[var(--hover)]"
             }`}
           >

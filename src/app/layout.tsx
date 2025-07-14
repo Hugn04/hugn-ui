@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import ScriptAdsence from "@/components/ScriptAdsence";
 
 const geistSans = Roboto({
   variable: "--font-geist-mondo",
@@ -23,11 +24,7 @@ export default function RootLayout({
     <html lang="vi" suppressHydrationWarning>
       <head>
         {/* Script Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7830893162068089"
-          crossOrigin="anonymous"
-        ></script>
+        <ScriptAdsence></ScriptAdsence>
       </head>
       <body className={`${geistSans.className} antialiased`}>
         <ThemeProvider

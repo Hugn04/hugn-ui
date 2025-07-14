@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 // import AdComponent from "@/components/AdComponent";
 export default function Home() {
   return (
@@ -48,7 +49,9 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fadeInUp opacity-0 [animation-delay:800ms] [animation-fill-mode:forwards]">
               <button className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                <span className="relative z-10">Đăng nhập ngay</span>
+                <Link href={"/login"} className="relative z-10">
+                  Đăng nhập ngay
+                </Link>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
               </button>

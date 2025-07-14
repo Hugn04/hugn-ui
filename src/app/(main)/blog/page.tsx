@@ -192,7 +192,7 @@ export default function BlogPage() {
   const regularPosts = blogPosts.filter((post) => !post.featured);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Blog Hero Section */}
       {/* <BlogHero /> */}
 
@@ -205,10 +205,10 @@ export default function BlogPage() {
         {featuredPosts.length > 0 && (
           <section className="mb-16">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold text-[var(--text-color)]">
                 Bài viết nổi bật
               </h2>
-              <div className="h-1 flex-1 bg-gradient-to-r from-blue-500 to-transparent ml-6 rounded-full"></div>
+              <div className="h-1 flex-1 bg-[var(--primary)] ml-6 rounded-full"></div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -227,12 +227,12 @@ export default function BlogPage() {
         {/* Regular Posts */}
         <section>
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-[var(--text-color)]">
               Bài viết mới nhất
             </h2>
             <Link
               href="/blog/archive"
-              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 group"
+              className="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium flex items-center gap-2 group"
             >
               Xem tất cả
               <svg
