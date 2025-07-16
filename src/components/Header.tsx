@@ -9,7 +9,7 @@ export default function Header() {
     { name: "Trang chủ", href: "/" },
     { name: "Blog", href: "/blog" },
     { name: "Mẫu", href: "/template" },
-    { name: "Về chúng tôi", href: "/about" },
+    { name: "Mạng xã hội", href: "/social" },
     { name: "Liên hệ", href: "/contact" },
   ];
 
