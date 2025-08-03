@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEditorState, type Editor } from "@tiptap/react";
 import { Button } from "../ui/button";
 import {
@@ -27,9 +27,12 @@ import ListTools from "./ListTools";
 import type { Event } from "./ListTools";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Input } from "../ui/input";
+import AssetLibrary from "../AssetLibrary/AssetLibrary";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
 export default function MenuEditer({ editor }: { editor: Editor }) {
-  const [sizeImage, setSizeImage] = useState(100);
+  const imageSizeRef = useRef<HTMLInputElement>(null);
+  const [assetOpen, setAssetOpen] = useState<boolean>(false);
   const obj: Event[] = [
     {
       name: "isHeading1",
@@ -74,16 +77,16 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
       action: editor.chain().focus().toggleOrderedList().run,
     },
   ];
-  const addImage = () => {
-    const url = window.prompt("URL");
-
+  const addImage = (url: string) => {
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-      // editor.commands.setResizableImage({
-      //   src: url,
-      //   width: 300,
-      //   height: 200,
-      // });
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          src: url,
+          alt: "",
+        })
+        .run();
     }
   };
 
@@ -127,7 +130,6 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
   return (
     <div className="flex justify-center px-2 bg-[var(--background)] border-b-[var(--hover)] border-b-[2] sticky top-0 z-50">
       <div className="flex gap-[2]">
-        <ModeToggle></ModeToggle>
         {/* <Button>Cỡ chữ</Button> */}
         {/* Undo  */}
         <Button
@@ -241,14 +243,43 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
         >
           <AlignJustify></AlignJustify>
         </Button>
-        <Button onClick={addImage}>
-          <ImageIcon />
-        </Button>
+        <Dialog open={assetOpen} onOpenChange={() => setAssetOpen(false)}>
+          <Button onClick={() => setAssetOpen(true)}>
+            <ImageIcon></ImageIcon>
+          </Button>
+          <DialogContent
+            className="w-[80vw] h-[90vh] max-w-screen max-h-screen p-0 [&_[data-slot=dialog-close]]:hidden"
+            style={{ maxWidth: "100vw" }}
+          >
+            <DialogTitle className="sr-only">Asset Library</DialogTitle>
+            <AssetLibrary
+              numberColumns={6}
+              onSelect={(asset) => {
+                addImage(asset.url);
+                setAssetOpen(false);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+
         <Popover>
           <PopoverTrigger asChild>
             <Button
               disabled={!editorState.isImage}
               variant={editorState.isImage ? "active" : "unactive"}
+              onClick={() => {
+                const image = editor.getAttributes("imageComponent") as {
+                  src: string;
+                  width: number;
+                  height?: number;
+                  alt?: string;
+                };
+                if (imageSizeRef.current) {
+                  console.log(image.width);
+
+                  imageSizeRef.current.value = image.width.toString();
+                }
+              }}
             >
               <ImageUpscale />
             </Button>
@@ -266,26 +297,38 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
                   <label htmlFor="width">Width</label>
                   <Input
                     id="width"
+                    min={200}
                     // defaultValue={100}
                     className="col-span-2 h-8"
                     type="number"
-                    value={sizeImage}
-                    onChange={(e) => {
-                      const size = Number.parseInt(e.target.value);
-                      setSizeImage(size);
-                    }}
+                    ref={imageSizeRef}
                   />
                 </div>
               </div>
               <Button
                 onClick={() => {
-                  editor
-                    .chain()
-                    .focus()
-                    .updateAttributes("imageComponent", {
-                      width: sizeImage,
-                    })
-                    .run();
+                  const imageSize = Number.parseInt(
+                    imageSizeRef.current?.value || "100"
+                  );
+                  if (imageSize > 100) {
+                    if (imageSize > 864)
+                      editor
+                        .chain()
+                        .focus()
+                        .updateAttributes("imageComponent", {
+                          width: "100%",
+                        })
+                        .run();
+                  } else {
+                    editor
+                      .chain()
+                      .focus()
+                      .updateAttributes("imageComponent", {
+                        width: "100%",
+                      })
+                      .run();
+                    alert("Image size must be greater than 100px");
+                  }
                 }}
               >
                 Ok
@@ -293,6 +336,7 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
             </div>
           </PopoverContent>
         </Popover>
+        <ModeToggle></ModeToggle>
       </div>
     </div>
   );

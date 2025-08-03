@@ -9,6 +9,9 @@ export default function Login() {
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.type === "SSO") {
+        const token = event.data.access_tokens;
+        localStorage.setItem("token", token);
+
         window.location.href = "/";
       }
     });

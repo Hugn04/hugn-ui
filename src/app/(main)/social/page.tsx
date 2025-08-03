@@ -7,6 +7,7 @@ import {
   Bookmark,
   MoreHorizontal,
 } from "lucide-react";
+import Image from "next/image";
 
 interface Post {
   id: string;
@@ -224,7 +225,7 @@ const BlogApp: React.FC = () => {
           {/* New Post */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <div className="flex items-center space-x-4 mb-4">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face"
                 alt="Your avatar"
                 className="w-12 h-12 rounded-full"
@@ -274,7 +275,7 @@ const BlogApp: React.FC = () => {
                 <div className="p-6 pb-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <img
+                      <Image
                         src={post.author.avatar}
                         alt={post.author.name}
                         className="w-12 h-12 rounded-full"
@@ -307,7 +308,7 @@ const BlogApp: React.FC = () => {
 
                   {/* Post Image */}
                   {post.image && (
-                    <img
+                    <Image
                       src={post.image}
                       alt="Post image"
                       className="w-full rounded-lg object-cover max-h-96"
@@ -389,7 +390,7 @@ const BlogApp: React.FC = () => {
                     {/* Existing Comments */}
                     {comments[post.id]?.map((comment) => (
                       <div key={comment.id} className="flex space-x-3 mb-4">
-                        <img
+                        <Image
                           src={comment.author.avatar}
                           alt={comment.author.name}
                           className="w-8 h-8 rounded-full"
@@ -412,7 +413,7 @@ const BlogApp: React.FC = () => {
 
                     {/* Add Comment */}
                     <div className="flex space-x-3">
-                      <img
+                      <Image
                         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face"
                         alt="Your avatar"
                         className="w-8 h-8 rounded-full"

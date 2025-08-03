@@ -3,23 +3,18 @@ import { TextStyleKit } from "@tiptap/extension-text-style";
 import TextAlign from "@tiptap/extension-text-align";
 import { ResizableImage } from "tiptap-extension-resizable-image";
 
-import Image from "@tiptap/extension-image";
+// import Image from "@tiptap/extension-image";
 import "./style.scss";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
 import MenuEditer from "./MenuEditer";
+import { CustomImage } from "./CustomImage";
 
 const extensions = [
   TextStyleKit,
   ResizableImage,
-  Image.configure({
-    inline: false,
-    allowBase64: true,
-    HTMLAttributes: {
-      class: "my-image",
-    },
-  }),
+  CustomImage,
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
@@ -35,12 +30,14 @@ export default function TextEditer() {
   if (!editor) return null;
 
   return (
-    <div>
+    <div className="">
       <MenuEditer editor={editor} />
-      <EditorContent
-        editor={editor}
-        className="tiptap p-4 border-none focus:border-none"
-      />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <EditorContent
+          editor={editor}
+          className="prose prose-lg max-w-none dark:prose-invert"
+        />
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import ScriptAdsence from "@/components/ScriptAdsence";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Roboto({
   variable: "--font-geist-mondo",
@@ -34,6 +35,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster></Toaster>
         </ThemeProvider>
       </body>
     </html>

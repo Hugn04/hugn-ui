@@ -56,15 +56,12 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
     slug: slug,
     excerpt:
       "Tìm hiểu cách tối ưu SEO hiệu quả cho ứng dụng Next.js với App Router thông qua các kỹ thuật metadata, structured data và server components.",
-    content: `
-      <p>Next.js App Router mang đến nhiều cải tiến mạnh mẽ cho việc tối ưu SEO...</p>
-      <h2>1. Metadata API</h2>
-      <p>Sử dụng Metadata API để quản lý meta tags hiệu quả...</p>
-      <h2>2. Server Components</h2>
-      <p>Server Components giúp cải thiện performance và SEO...</p>
-      <h2>3. Structured Data</h2>
-      <p>Thêm structured data để Google hiểu nội dung tốt hơn...</p>
-    `,
+    content: `<h1 style="text-align: left;"><strong>Hi there,</strong></h1><pre><code>async function getRelatedPosts(
+  categorySlug: string,
+  currentSlug: string
+): Promise&lt;BlogPost[]&gt; {</code></pre><p><span class="node-imageComponent"><span class="image-component"><img src="https://res.cloudinary.com/dfrk1gorf/image/upload/v1743057244/img_quiz/vd85ok1jqczx6wgpvnzd.jpg" alt="" title="" width="500" height="500" style="max-width: 500px" data-keep-ratio="true" class=""></span></span>This is a <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:</p><ol><li><p style="text-align: left;">That’s a bullet list with one …</p></li><li><p style="text-align: left;">… or two list items.</p></li></ol><p><span class="node-imageComponent"><span class="image-component"><img src="https://res.cloudinary.com/dfrk1gorf/image/upload/v1743240083/img_quiz/ccj8jg5xwb7aqwttmrpl.jpg" alt="" title="" width="500" height="500" style="max-width: 500px" data-keep-ratio="true" class=""></span></span>Isn’t that great? <strong>And all of that is editable. But wait, there’s more. Let’s try a code block:</strong></p><pre><code class="language-css">body {
+  display: none;
+}</code></pre><p style="text-align: left;">I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.</p><img src="https://res.cloudinary.com/dfrk1gorf/image/upload/v1743240083/img_quiz/ccj8jg5xwb7aqwttmrpl.jpg" alt="" style="width: 100%; height: auto;"><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote><p style="text-align: left;"></p>`,
     publishedAt: "2024-01-15T10:00:00Z",
     updatedAt: "2024-01-20T14:30:00Z",
     author: {
@@ -125,6 +122,8 @@ export async function generateMetadata({
   params,
 }: BlogDetailPageProps): Promise<Metadata> {
   const post = await getBlogPost(params.slug);
+
+  // post = { content: localStorage.getItem("data") || "", ...post };
 
   if (!post) {
     return {
@@ -338,7 +337,9 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   }
 
   const relatedPosts = await getRelatedPosts(post.category.slug, post.slug);
-
+  {
+    // console.log(post.content);
+  }
   return (
     <>
       <StructuredData post={post} />
@@ -401,6 +402,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         </header>
 
         {/* Article Content */}
+
         <div
           className="prose prose-lg max-w-none mb-8"
           dangerouslySetInnerHTML={{ __html: post.content }}
