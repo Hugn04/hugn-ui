@@ -252,13 +252,15 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
             style={{ maxWidth: "100vw" }}
           >
             <DialogTitle className="sr-only">Asset Library</DialogTitle>
-            <AssetLibrary
-              numberColumns={6}
-              onSelect={(asset) => {
-                addImage(asset.url);
-                setAssetOpen(false);
-              }}
-            />
+            <div className="h-full overflow-hidden">
+              <AssetLibrary
+                numberColumns={5}
+                onSelect={(asset) => {
+                  addImage(asset.url);
+                  setAssetOpen(false);
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
 

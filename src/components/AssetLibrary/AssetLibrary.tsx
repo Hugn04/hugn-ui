@@ -7,11 +7,21 @@ import AssetItem from "./AssetItem";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import axiosClient from "@/utils/requestClient";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 
 export type Asset = {
-  id: number;
+  public_id: number;
   type: "image" | "video" | "file";
   url: string;
+  format: "jpg" | "png" | "gif" | "mp4" | "pdf" | string; // Định dạng file (tùy chọn)
   size: number; // Kích thước file (tùy chọn)
 };
 
@@ -20,26 +30,26 @@ interface AssetLibraryProps {
   onSelect?: (asset: Asset) => void;
 }
 
-const mockAssets: Asset[] = [
-  {
-    id: 1,
-    type: "image",
-    url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1750864431/img_quiz/q6thh7wmofaocclg3enj.jpg",
-    size: 345678,
-  },
-  {
-    id: 2,
-    type: "image",
-    url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743057244/img_quiz/vd85ok1jqczx6wgpvnzd.jpg",
-    size: 345678,
-  },
-  {
-    id: 3,
-    type: "image",
-    url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743240083/img_quiz/ccj8jg5xwb7aqwttmrpl.jpg",
-    size: 345678,
-  },
-];
+// const mockAssets: Asset[] = [
+//   {
+//     id: 1,
+//     type: "image",
+//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1750864431/img_quiz/q6thh7wmofaocclg3enj.jpg",
+//     size: 345678,
+//   },
+//   {
+//     id: 2,
+//     type: "image",
+//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743057244/img_quiz/vd85ok1jqczx6wgpvnzd.jpg",
+//     size: 345678,
+//   },
+//   {
+//     id: 3,
+//     type: "image",
+//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743240083/img_quiz/ccj8jg5xwb7aqwttmrpl.jpg",
+//     size: 345678,
+//   },
+// ];
 
 const AssetLibrary: React.FC<AssetLibraryProps> = ({
   numberColumns = 7,
@@ -51,20 +61,17 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const data = await axiosClient.get("/assets");
-        console.log(data.data);
-
-        // setAssets(data.data);
+        const { data } = await axiosClient.get<Asset[]>("/assets");
+        setAssets(data);
       } catch (error) {
         console.log("Error fetching assets:", error);
       }
     };
     fetchAssets();
-    setAssets(mockAssets);
   }, []);
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="flex flex-col w-full h-full p-4">
       <div className="flex items-center justify-between pb-2 border-b-2">
         <h2 className="text-lg font-bold mb-4 ">Asset Library</h2>
         <Button>
@@ -95,9 +102,10 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
       </div>
       <div
         className={cn(
+          "flex-1 overflow-y-visible overflow-x-hidden",
           viewMode === "grid"
-            ? `grid grid-cols-2 md:grid-cols-3 gap-4`
-            : "flex flex-col gap-4"
+            ? `grid grid-cols-2 md:grid-cols-3 gap-4 items-start`
+            : "flex flex-col gap-2 px-2"
         )}
         style={{
           gridTemplateColumns: `repeat(${numberColumns}, minmax(0, 1fr))`,
@@ -109,11 +117,36 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
             asset={asset}
             setPreview={setPreview}
             onSelect={onSelect}
-            key={asset.id}
+            key={asset.public_id}
           ></AssetItem>
         ))}
       </div>
-
+      <div className="px-2 pt-4">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
       <Dialog open={!!preview} onOpenChange={() => setPreview(null)}>
         <DialogContent className="z-60 w-auto h-auto p-0 border-none [&_[data-slot=dialog-close]]:hidden">
           <DialogTitle className="sr-only">Asset Library</DialogTitle>

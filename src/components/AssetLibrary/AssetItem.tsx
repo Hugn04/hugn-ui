@@ -39,7 +39,7 @@ export default function AssetItem({
       className={
         mode === "grid"
           ? "border-2 rounded shadow transition"
-          : "flex border-b-2"
+          : "flex border-y-2 py-1"
       }
     >
       <div
@@ -88,7 +88,7 @@ export default function AssetItem({
           <div className="text-right text-sm text-gray-500">26/8/2004</div>
         </div>
         <div className="flex justify-between items-center text-sm text-gray-500 mb-2 gap-2">
-          <div>Type: image/jpg</div>
+          <div>Type: image/{asset.format}</div>
           <div>{(asset.size / 1024).toFixed(2)} KB</div>
         </div>
         <div className="flex items-center justify-between gap-2">

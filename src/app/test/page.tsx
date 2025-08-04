@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 // import AssetLibrary, { Asset } from "./components/AssetLibrary";
-import Image from "next/image";
-import AssetLibrary, { Asset } from "@/components/AssetLibrary/AssetLibrary";
+
+import AssetLibrary from "@/components/AssetLibrary/AssetLibrary";
 
 function App() {
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-
   return (
-    <AssetLibrary />
+    <div className="h-screen w-screen p-8">
+      <AssetLibrary />
+    </div>
     // <div className="w-[800px] h-[600px] p-8">
     // </div>
     // <div className="p-8">
