@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import copyTextToClipboard from "@/utils/copyTextToClipboard";
+import { formatDate } from "@/helper/formatDate";
 
 interface AssetItemProps {
   mode: "grid" | "list";
@@ -84,11 +85,15 @@ export default function AssetItem({
       >
         <div className="mb-2 truncate max-w-full"> {getName(asset.url)}</div>
         <div className="flex justify-between items-center text-sm text-gray-500 gap-2">
-          <div>Size: 500x400</div>
-          <div className="text-right text-sm text-gray-500">26/8/2004</div>
+          <div>Size: {`${asset.width}x${asset.height}`}</div>
+          <div className="text-right text-sm text-gray-500">
+            {formatDate(asset.createdAt)}
+          </div>
         </div>
         <div className="flex justify-between items-center text-sm text-gray-500 mb-2 gap-2">
-          <div>Type: image/{asset.format}</div>
+          <div>
+            Type: {asset.type}/{asset.format}
+          </div>
           <div>{(asset.size / 1024).toFixed(2)} KB</div>
         </div>
         <div className="flex items-center justify-between gap-2">

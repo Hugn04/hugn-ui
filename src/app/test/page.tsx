@@ -6,7 +6,7 @@ import AssetLibrary from "@/components/AssetLibrary/AssetLibrary";
 
 function App() {
   return (
-    <div className="h-screen w-screen p-8">
+    <div className="h-screen w-screen">
       <AssetLibrary />
     </div>
     // <div className="w-[800px] h-[600px] p-8">
