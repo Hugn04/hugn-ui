@@ -23,9 +23,9 @@ import UploadImage from "./UploadImage";
 
 export type Asset = {
   id: number;
+  public_id: string;
   url: string;
-  type: "image" | "video" | "file";
-  format: "jpg" | "png" | "gif" | "mp4" | "pdf" | string; // Định dạng file (tùy chọn)
+  type: string;
   width: number; // Chiều rộng (tùy chọn)
   height: number; // Chiều cao (tùy chọn)
   size: number; // Kích thước file (tùy chọn)
@@ -103,24 +103,8 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
   }, [currentPage, limitParam]);
 
   return (
-    <div className="flex flex-col w-full h-full p-4">
-      <div className="flex items-center justify-between pb-2 border-b-2">
-        <h2 className="text-lg font-bold mb-4 ">Asset Library</h2>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Upload></Upload>
-              Upload Asset
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="z-60 w-auto h-auto p-4 [&_[data-slot=dialog-close]]:hidden">
-            <DialogTitle className="sr-only">Upload Assets</DialogTitle>
-            <UploadImage></UploadImage>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <div className="flex items-center justify-between py-2 mb-4 border-b-2">
+    <div className="flex flex-col w-full h-full px-4 py-2">
+      <div className="flex items-center justify-between pb-2 mb-4 border-b-2">
         <input
           type="text"
           placeholder="Tìm kiếm tài sản..."
@@ -139,6 +123,21 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
           >
             <List></List>
           </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Upload></Upload>
+                Upload Asset
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              className="z-60 w-auto h-auto p-0 [&_[data-slot=dialog-close]]:hidden"
+              style={{ maxWidth: "100vw" }}
+            >
+              <DialogTitle className="sr-only">Upload Assets</DialogTitle>
+              <UploadImage onUpload={onSelect}></UploadImage>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div

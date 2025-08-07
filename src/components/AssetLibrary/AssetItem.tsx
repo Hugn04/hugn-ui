@@ -17,6 +17,8 @@ import {
 } from "../ui/alert-dialog";
 import copyTextToClipboard from "@/utils/copyTextToClipboard";
 import { formatDate } from "@/helper/formatDate";
+import axiosClient from "@/utils/requestClient";
+import { toast } from "sonner";
 
 interface AssetItemProps {
   mode: "grid" | "list";
@@ -34,7 +36,26 @@ export default function AssetItem({
     const parts = url.split("/");
     return parts[parts.length - 1];
   };
-
+  const handleDelete = async (publicId: string) => {
+    try {
+      toast.loading("Đang xóa hình ảnh ...", {
+        id: "delete",
+      });
+      await axiosClient.delete("/delete-image", {
+        params: {
+          id: publicId,
+        },
+      });
+      toast.success("Xóa hình ảnh thành công", {
+        id: "delete",
+      });
+    } catch (error) {
+      toast.error("Xóa hình ảnh thất bại", {
+        id: "delete",
+      });
+      console.log(error);
+    }
+  };
   return (
     <div
       className={
@@ -91,9 +112,7 @@ export default function AssetItem({
           </div>
         </div>
         <div className="flex justify-between items-center text-sm text-gray-500 mb-2 gap-2">
-          <div>
-            Type: {asset.type}/{asset.format}
-          </div>
+          <div>Type: {asset.type}</div>
           <div>{(asset.size / 1024).toFixed(2)} KB</div>
         </div>
         <div className="flex items-center justify-between gap-2">
@@ -135,7 +154,13 @@ export default function AssetItem({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Hủy </AlertDialogCancel>
-                <AlertDialogAction>Tiếp tục</AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() => {
+                    handleDelete(asset.public_id);
+                  }}
+                >
+                  Tiếp tục
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

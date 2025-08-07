@@ -10,7 +10,7 @@ export default function Header() {
     { name: "Blog", href: "/blog" },
     { name: "Mẫu", href: "/template" },
     { name: "Mạng xã hội", href: "/social" },
-    { name: "Liên hệ", href: "/contact" },
+    { name: "Thư viện", href: "/admin/library" },
   ];
 
   return (

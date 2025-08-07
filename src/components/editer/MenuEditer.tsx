@@ -248,10 +248,10 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
             <ImageIcon></ImageIcon>
           </Button>
           <DialogContent
-            className="w-[80vw] h-[90vh] max-w-screen max-h-screen p-0 [&_[data-slot=dialog-close]]:hidden"
+            className="w-[80vw] h-[90vh] max-w-screen max-h-screen  [&_[data-slot=dialog-close]]:hidden"
             style={{ maxWidth: "100vw" }}
           >
-            <DialogTitle className="sr-only">Asset Library</DialogTitle>
+            <DialogTitle>Asset Library</DialogTitle>
             <div className="h-full overflow-hidden">
               <AssetLibrary
                 numberColumns={5}
