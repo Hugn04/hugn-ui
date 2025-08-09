@@ -82,9 +82,14 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
       editor
         .chain()
         .focus()
-        .setImage({
+        .setResizableImage({
           src: url,
-          alt: "",
+          alt: "Ảnh demo",
+          title: "Demo",
+          width: 300,
+          height: 200,
+          "data-keep-ratio": true,
+          caption: "",
         })
         .run();
     }
@@ -313,7 +318,7 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
                     imageSizeRef.current?.value || "100"
                   );
                   if (imageSize > 100) {
-                    if (imageSize > 864)
+                    if (imageSize > 864) {
                       editor
                         .chain()
                         .focus()
@@ -321,14 +326,16 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
                           width: "100%",
                         })
                         .run();
+                    } else {
+                      editor
+                        .chain()
+                        .focus()
+                        .updateAttributes("imageComponent", {
+                          width: imageSize,
+                        })
+                        .run();
+                    }
                   } else {
-                    editor
-                      .chain()
-                      .focus()
-                      .updateAttributes("imageComponent", {
-                        width: "100%",
-                      })
-                      .run();
                     alert("Image size must be greater than 100px");
                   }
                 }}
