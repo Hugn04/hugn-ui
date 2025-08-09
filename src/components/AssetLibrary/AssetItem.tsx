@@ -19,6 +19,7 @@ import copyTextToClipboard from "@/utils/copyTextToClipboard";
 import { formatDate } from "@/helper/formatDate";
 import axiosClient from "@/utils/requestClient";
 import { toast } from "sonner";
+import { mutate } from "swr";
 
 interface AssetItemProps {
   mode: "grid" | "list";
@@ -49,6 +50,12 @@ export default function AssetItem({
       toast.success("Xóa hình ảnh thành công", {
         id: "delete",
       });
+      mutate(
+        // Lọc ra tất cả key bắt đầu bằng "/assets"
+        (key) => Array.isArray(key) && key[0] === "/assets",
+        undefined, // để re-fetch toàn bộ các key match
+        true // revalidate
+      );
     } catch (error) {
       toast.error("Xóa hình ảnh thất bại", {
         id: "delete",

@@ -17,19 +17,19 @@ import {
   PaginationPrevious,
 } from "../ui/pagination";
 import getPaginationItems from "@/helper/getPaginationItems";
-import { useRouter, useSearchParams } from "next/navigation";
-import { DialogTrigger } from "@radix-ui/react-dialog";
+import useSWR, { mutate } from "swr";
 import UploadImage from "./UploadImage";
+import { useSearchParams } from "next/navigation";
 
 export type Asset = {
   id: number;
   public_id: string;
   url: string;
   type: string;
-  width: number; // Chiều rộng (tùy chọn)
-  height: number; // Chiều cao (tùy chọn)
-  size: number; // Kích thước file (tùy chọn)
-  createdAt: string; // Ngày tạo (tùy chọn)
+  width: number;
+  height: number;
+  size: number;
+  createdAt: string;
 };
 
 type AssetsPagination = {
@@ -45,62 +45,48 @@ interface AssetLibraryProps {
   onSelect?: (asset: Asset) => void;
 }
 
-// const mockAssets: Asset[] = [
-//   {
-//     id: 1,
-//     type: "image",
-//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1750864431/img_quiz/q6thh7wmofaocclg3enj.jpg",
-//     size: 345678,
-//   },
-//   {
-//     id: 2,
-//     type: "image",
-//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743057244/img_quiz/vd85ok1jqczx6wgpvnzd.jpg",
-//     size: 345678,
-//   },
-//   {
-//     id: 3,
-//     type: "image",
-//     url: "https://res.cloudinary.com/dfrk1gorf/image/upload/v1743240083/img_quiz/ccj8jg5xwb7aqwttmrpl.jpg",
-//     size: 345678,
-//   },
-// ];
+const fetcher = <T,>(url: string, params?: Record<string, any>) =>
+  axiosClient.get<T>(url, { params }).then((res) => res.data);
 
 const AssetLibrary: React.FC<AssetLibraryProps> = ({
   numberColumns = 7,
   onSelect,
 }) => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pageParam = searchParams.get("page");
   const limitParam = searchParams.get("limit");
-  const [assets, setAssets] = useState<AssetsPagination | null>(null);
   const [preview, setPreview] = useState<Asset | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(Number(pageParam) || 1);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   const updatePage = (newPage: number) => {
     if (!onSelect) {
       const params = new URLSearchParams(searchParams);
       params.set("page", newPage.toString());
-      router.push(`?${params.toString()}`);
+      window.history.pushState({}, "", `${window.location.pathname}?${params}`);
     }
-    setCurrentPage(newPage); // Nếu bạn vẫn cần state nội bộ
+    setCurrentPage(newPage);
   };
 
+  const {
+    data: assets,
+    isLoading,
+    error,
+  } = useSWR<AssetsPagination>(
+    ["/assets", { page: currentPage, limit: limitParam || 21 }],
+    (args: [string, Record<string, any>]) => fetcher(args[0], args[1]),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000, // 1 phút mới gọi lại
+    }
+  );
+  // Lưu totalPages vào client tránh reload
   useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const { data } = await axiosClient.get("/assets", {
-          params: { page: currentPage, limit: limitParam || 21 },
-        });
-        setAssets(data);
-      } catch (error) {
-        console.log("Error fetching assets:", error);
-      }
-    };
-    fetchAssets();
-  }, [currentPage, limitParam]);
+    if (assets?.totalPages) setTotalPages(assets.totalPages);
+  }, [assets?.totalPages]);
 
   return (
     <div className="flex flex-col w-full h-full px-4 py-2">
@@ -123,19 +109,34 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
           >
             <List></List>
           </Button>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Upload></Upload>
-                Upload Asset
-              </Button>
-            </DialogTrigger>
+          <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
+            <Button
+              onClick={() => {
+                setUploadOpen(true);
+              }}
+            >
+              <Upload></Upload>
+              Upload Asset
+            </Button>
             <DialogContent
               className="z-60 w-auto h-auto p-0 [&_[data-slot=dialog-close]]:hidden"
               style={{ maxWidth: "100vw" }}
             >
               <DialogTitle className="sr-only">Upload Assets</DialogTitle>
-              <UploadImage onUpload={onSelect}></UploadImage>
+              <UploadImage
+                onUpload={(asset) => {
+                  if (onSelect) {
+                    onSelect(asset);
+                  }
+                  setUploadOpen(false);
+                  mutate(
+                    // Lọc ra tất cả key bắt đầu bằng "/assets"
+                    (key) => Array.isArray(key) && key[0] === "/assets",
+                    undefined, // để re-fetch toàn bộ các key match
+                    true // revalidate
+                  );
+                }}
+              ></UploadImage>
             </DialogContent>
           </Dialog>
         </div>
@@ -151,59 +152,59 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
           gridTemplateColumns: `repeat(${numberColumns}, minmax(0, 1fr))`,
         }}
       >
-        {assets?.data.map((asset) => (
-          <AssetItem
-            mode={viewMode}
-            asset={asset}
-            setPreview={setPreview}
-            onSelect={onSelect}
-            key={asset.id}
-          ></AssetItem>
-        ))}
+        {error && "Lỗi phía server"}
+        {isLoading
+          ? "Loading"
+          : assets?.data.map((asset) => (
+              <AssetItem
+                mode={viewMode}
+                asset={asset}
+                setPreview={setPreview}
+                onSelect={onSelect}
+                key={asset.id}
+              ></AssetItem>
+            ))}
       </div>
       <div className="px-2 pt-4">
-        {assets && (
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className="cursor-pointer"
-                  onClick={() => updatePage(Math.max(1, currentPage - 1))}
-                />
-              </PaginationItem>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                className="cursor-pointer select-none"
+                onClick={() => updatePage(Math.max(1, currentPage - 1))}
+              />
+            </PaginationItem>
 
-              {getPaginationItems(currentPage, assets.totalPages, 9).map(
-                (item, i) =>
-                  item === "..." ? (
-                    <PaginationItem key={`ellipsis-${i}`}>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  ) : (
-                    <PaginationItem key={item}>
-                      <PaginationLink
-                        className="cursor-pointer"
-                        isActive={item === currentPage}
-                        onClick={() => updatePage(item as number)}
-                      >
-                        {item}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-              )}
-              <PaginationItem>
-                <PaginationNext
-                  className="cursor-pointer"
-                  onClick={() =>
-                    updatePage(Math.min(assets.totalPages, currentPage + 1))
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
+            {getPaginationItems(currentPage, totalPages, 9).map((item, i) =>
+              item === "..." ? (
+                <PaginationItem key={`ellipsis-${i}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <PaginationItem key={item}>
+                  <PaginationLink
+                    className="cursor-pointer select-none"
+                    isActive={item === currentPage}
+                    onClick={() => updatePage(item as number)}
+                  >
+                    {item}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext
+                className="cursor-pointer select-none"
+                onClick={() =>
+                  updatePage(Math.min(totalPages, currentPage + 1))
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
       <Dialog open={!!preview} onOpenChange={() => setPreview(null)}>
-        <DialogContent className="z-60 w-auto h-auto p-0 border-none [&_[data-slot=dialog-close]]:hidden">
+        <DialogContent className="z-60 w-auto h-auto p-0 focus:outline-none border-none [&_[data-slot=dialog-close]]:hidden">
           <DialogTitle className="sr-only">Asset Library</DialogTitle>
           {preview && (
             <div className="flex justify-center">

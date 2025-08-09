@@ -9,12 +9,13 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
 import MenuEditer from "./MenuEditer";
-import { CustomImage } from "./CustomImage";
+// import { CustomImage } from "./CustomImage";
+import { Image } from "@tiptap/extension-image";
 
 const extensions = [
   TextStyleKit,
   ResizableImage,
-  CustomImage,
+  Image,
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
