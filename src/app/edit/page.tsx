@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import React from "react";
 
-const TextEditer = dynamic(() => import("@/components/editer/BlogEditor"), {
+const TextEditer = dynamic(() => import("@/components/Editer/BlogEditor"), {
   ssr: false,
 });
 
