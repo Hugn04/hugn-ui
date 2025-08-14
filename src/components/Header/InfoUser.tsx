@@ -2,9 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
-import { ModeToggle } from "../ModeToggle";
 import axiosClient from "@/utils/requestClient";
 import { getSortName } from "@/helper/getSortName";
+import { Home, LogOut, LucideIcon, User2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 type User = {
   avatarUrl: string;
   createdAt: string;
@@ -14,8 +21,33 @@ type User = {
   updatedAt: string;
   username: string;
 };
-export default function InfoUser() {
+
+type Menu = {
+  title: string;
+  icon: LucideIcon;
+  onClick?: () => void;
+  href?: string;
+};
+
+type UserInfoProps = {
+  menu?: Menu[];
+  side?: "right" | "top" | "bottom" | "left" | undefined;
+};
+const menu: Menu[] = [
+  {
+    title: "Trang chủ",
+    icon: Home,
+    onClick: () => {
+      console.log(123);
+    },
+    href: "/",
+  },
+  { title: "Profile", icon: User2 },
+  { title: "Đăng xuất", icon: LogOut },
+];
+export default function InfoUser({ side }: UserInfoProps) {
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -29,19 +61,51 @@ export default function InfoUser() {
     fetchUser();
   }, []);
   return (
-    <div className="flex items-center gap-2">
+    <div>
       {user ? (
-        <div className="flex items-center gap-2">
-          <Avatar className="md:w-10 md:h-10 border-2 border-[var(--primary)]">
-            {user.avatarUrl && (
-              <AvatarImage src="http://localhost:3000/_next/image?url=%2Fassets%2Fimages%2FHomeLogo.png&w=1080&q=75" />
-            )}
-            <AvatarFallback>{getSortName(user.username)}</AvatarFallback>
-          </Avatar>
-          <span className="inline-block max-w-[160px] truncate">
-            {user.username}
-          </span>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-2 rounded-[8px] px-2 py-1 hover:bg-[var(--hover)] cursor-pointer">
+              <Avatar className="md:w-10 md:h-10 border-2 border-[var(--primary)]">
+                {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
+                <AvatarFallback>{getSortName(user.username)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="inline-block max-w-[120px] truncate text-sm font-medium">
+                  {user.username}
+                </span>
+                <span className="inline-block max-w-[135px] truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+              </div>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side={side} align="end">
+            {menu.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <DropdownMenuItem
+                  key={index}
+                  onSelect={() => {
+                    if (item.href) {
+                      router.push(item.href);
+                    }
+                    item.onClick?.();
+                  }}
+                >
+                  <Icon></Icon>
+                  {item.title}
+                  {/* <Button variant={"outline"} className="outline-none w-full">
+                    dsak
+                  </Button> */}
+                </DropdownMenuItem>
+              );
+            })}
+            {/* <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem>Subscription</DropdownMenuItem> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <Link
           href={"/login"}
@@ -50,10 +114,6 @@ export default function InfoUser() {
           Đăng nhập
         </Link>
       )}
-
-      <div className="hidden md:block ">
-        <ModeToggle type="icon"></ModeToggle>
-      </div>
     </div>
   );
 }

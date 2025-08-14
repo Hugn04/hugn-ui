@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
 import InfoUser from "./InfoUser";
+import { ModeToggle } from "../ModeToggle";
 export default function Header() {
   return (
     <header className="bg-[var(--background)] border-b-[var(--hover)] border-b-[2] sticky top-0 z-50">
@@ -23,7 +24,10 @@ export default function Header() {
           <Navigation />
 
           {/* User Actions */}
-          <InfoUser></InfoUser>
+          <div className="flex gap-4">
+            <InfoUser></InfoUser>
+            <ModeToggle type="icon"></ModeToggle>
+          </div>
 
           {/* Mobile menu button */}
         </div>
