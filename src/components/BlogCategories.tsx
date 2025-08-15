@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Categories } from "@/types/categories";
 import { useState } from "react";
 
@@ -8,7 +9,7 @@ export default function BlogCategories({
   categories: Categories[];
 }) {
   const [categories, setCategories] = useState(initialCategories);
-
+  const { token } = useAuth();
   const handleCategoryClick = (clickedCategory: Categories) => {
     setCategories(
       categories.map((category) => ({
@@ -20,6 +21,7 @@ export default function BlogCategories({
 
   return (
     <div className="mb-12">
+      {token}
       <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
         {categories.map((category) => (
           <button

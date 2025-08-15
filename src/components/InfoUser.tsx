@@ -1,28 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import React, { useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import axiosClient from "@/utils/requestClient";
 import { getSortName } from "@/helper/getSortName";
-import { Home, LogOut, LucideIcon, User2 } from "lucide-react";
+import { LogOut, LucideIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-type User = {
-  avatarUrl: string;
-  createdAt: string;
-  email: string;
-  id: number;
-  passwordHash: string;
-  updatedAt: string;
-  username: string;
-};
+import { useAuth } from "@/contexts/AuthContext";
 
-type Menu = {
+export type Menu = {
   title: string;
   icon: LucideIcon;
   onClick?: () => void;
@@ -33,35 +25,41 @@ type UserInfoProps = {
   menu?: Menu[];
   side?: "right" | "top" | "bottom" | "left" | undefined;
 };
-const menu: Menu[] = [
-  {
-    title: "Trang chủ",
-    icon: Home,
-    onClick: () => {
-      console.log(123);
-    },
-    href: "/",
-  },
-  { title: "Profile", icon: User2 },
-  { title: "Đăng xuất", icon: LogOut },
-];
-export default function InfoUser({ side }: UserInfoProps) {
-  const [user, setUser] = useState<User | null>(null);
+
+export default function InfoUser({ menu: initMenu = [], side }: UserInfoProps) {
   const router = useRouter();
+  const { user, login, logout } = useAuth();
+  const menu = [
+    ...initMenu,
+    {
+      title: "Đăng xuất",
+      icon: LogOut,
+      onClick: async () => {
+        try {
+          await axiosClient.post("/logout");
+          logout();
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    },
+  ];
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await axiosClient.get("/verify");
-        localStorage.setItem("user", JSON.stringify(data));
-        setUser(data);
+        login(data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchUser();
+    if (!user) {
+      fetchUser();
+    }
   }, []);
   return (
-    <div>
+    <div className="flex items-center h-12">
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

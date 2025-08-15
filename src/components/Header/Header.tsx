@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
-import InfoUser from "./InfoUser";
 import { ModeToggle } from "../ModeToggle";
+import InfoUserHeader from "./InfoUserHeader";
 export default function Header() {
   return (
     <header className="bg-[var(--background)] border-b-[var(--hover)] border-b-[2] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-2 md:py-4">
+        <div className="flex justify-between items-center py-2 md:py-2">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center group">
@@ -24,8 +24,8 @@ export default function Header() {
           <Navigation />
 
           {/* User Actions */}
-          <div className="flex gap-4">
-            <InfoUser></InfoUser>
+          <div className="flex gap-4 items-center">
+            <InfoUserHeader></InfoUserHeader>
             <ModeToggle type="icon"></ModeToggle>
           </div>
 

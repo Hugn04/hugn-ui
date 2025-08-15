@@ -1,22 +1,22 @@
 "use client";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation.js";
 import { useEffect, useRef } from "react";
 
 export default function Login() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const router = useRouter();
+  const { setToken } = useAuth();
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.type === "SSO") {
-        const token = event.data.access_tokens;
-        localStorage.setItem("token", token);
-
+        // const token = event.data.access_tokens;
         window.location.href = "/";
       }
     });
     // return () => window.removeEventListener("message", onMessage);
-  }, [router]);
+  }, [router, setToken]);
   return (
     <div className="w-sc h-screen">
       <iframe

@@ -1,5 +1,6 @@
 import BlogCard from "@/components/BlogCard";
 import BlogCategories from "@/components/BlogCategories";
+import { useAuth } from "@/contexts/AuthContext";
 // import BlogHero from "@/components/BlogHero";
 import { blogPost } from "@/types/blogPost";
 import { Categories } from "@/types/categories";

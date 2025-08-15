@@ -17,7 +17,7 @@ import {
   Settings,
   Menu,
 } from "lucide-react";
-import InfoUser from "@/components/Header/InfoUser";
+import InfoUser from "@/components/InfoUser";
 import { ModeToggle } from "@/components/ModeToggle";
 
 const sidebarItems = [
