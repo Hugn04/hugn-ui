@@ -8,7 +8,7 @@ export function Breadcrumbs() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  const breadcrumbItems = [{ label: "Dashboard", href: "/admin", icon: Home }];
+  const breadcrumbItems = [{ label: "Admin", href: "/admin", icon: Home }];
 
   // Build breadcrumb items based on current path
   let currentPath = "";
@@ -22,8 +22,8 @@ export function Breadcrumbs() {
       case "posts":
         label = "Bài viết";
         break;
-      case "categories":
-        label = "Danh mục";
+      case "role":
+        label = "Quyền";
         break;
       case "settings":
         label = "Cài đặt";

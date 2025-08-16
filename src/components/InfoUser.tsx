@@ -48,7 +48,7 @@ export default function InfoUser({ menu: initMenu = [], side }: UserInfoProps) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axiosClient.get("/verify");
+        const { data } = await axiosClient.get("/auth");
         login(data);
       } catch (error) {
         console.log(error);

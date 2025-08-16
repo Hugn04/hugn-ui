@@ -23,12 +23,12 @@ import { ModeToggle } from "@/components/ModeToggle";
 const sidebarItems = [
   {
     title: "Dashboard",
-    href: "/admin",
+    href: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Bài viết",
-    href: "/admin/posts",
+    href: "/admin/role",
     icon: FileText,
   },
   {

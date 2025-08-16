@@ -23,6 +23,7 @@ export default function UploadImage({ onUpload = () => {} }: UploadImageProps) {
 
     const formData = new FormData();
     formData.append("img", file);
+    formData.append("status", "private");
 
     try {
       toast.loading("Đang tải ảnh lên...", {

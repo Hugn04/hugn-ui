@@ -1,7 +1,8 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-const PUBLIC_ROUTES = ["/", "/admin", "/login", "/template", "/api/pong"];
+const PUBLIC_ROUTES = ["/", "/login", "/template", "/api/pong"];
 
+let pathApi = "auth";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
@@ -15,8 +16,8 @@ export async function middleware(req: NextRequest) {
       return pathname === route;
     }
   });
-  const loginUrl = req.nextUrl.clone();
-  loginUrl.pathname = "/login";
+  const redirectUrl = req.nextUrl.clone();
+  redirectUrl.pathname = "/login";
 
   if (isPublic) {
     // if (pathname.startsWith("/loágin")) {
@@ -37,14 +38,34 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   } else {
     if (token) {
+      switch (pathname.split("/")[1]) {
+        case "admin":
+          pathApi = "admin";
+          redirectUrl.pathname = "/";
+          break;
+        case "studio":
+          pathApi = "studio";
+          redirectUrl.pathname = "/";
+          break;
+        default:
+          pathApi = "auth";
+          break;
+      }
+      // if (pathname.startsWith("/admin")) {
+      // } else {
+
+      // }
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/${pathApi}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
+          }
+        );
 
         // Kiểm tra nếu không thành công
         if (!res.ok) {
@@ -62,10 +83,10 @@ export async function middleware(req: NextRequest) {
       } catch (error) {
         console.error("Unexpected error:", error);
 
-        return NextResponse.redirect(loginUrl);
+        return NextResponse.redirect(redirectUrl);
       }
     }
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(redirectUrl);
   }
 }
 
