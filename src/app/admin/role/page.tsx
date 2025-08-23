@@ -15,20 +15,11 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,26 +30,50 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, MoreHorizontal, Edit, Trash2 } from "lucide-react";
-import { mockRoles } from "@/lib/mock-data";
+import { Plus, Edit, Trash2 } from "lucide-react";
 import type { Category } from "@/types/blogPost";
-import { Role } from "@/types/role";
+import { Permission, Role } from "@/types/role";
+import axiosClient from "@/utils/requestClient";
+import useSWR from "swr";
+import ChipSelect, { ChipItem } from "@/components/ChipSelect";
+
+const fetcher = <T,>(url: string) =>
+  axiosClient.get<T>(url).then((res) => res.data);
 
 export default function CategoriesPage() {
-  const [roles, setRoles] = useState<Role[]>(mockRoles);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Role>({
+    id: 0,
     name: "",
-    slug: "",
     description: "",
+    permissions: [],
+  });
+
+  const {
+    data: permissions,
+    // isLoading,
+    // error,
+  } = useSWR<Permission[]>("/admin/permissions", (url) => fetcher(url), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 60000, // 1 phút mới gọi lại
+  });
+  const {
+    data: roles,
+    // isLoading,
+    // error,
+  } = useSWR<Role[]>("/admin/role", (url) => fetcher(url), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 60000, // 1 phút mới gọi lại
   });
 
   const resetForm = () => {
     setFormData({
-      name: "",
+      id: "",
       slug: "",
       description: "",
     });
@@ -99,12 +114,13 @@ export default function CategoriesPage() {
     // setIsAddDialogOpen(false);
   };
 
-  const handleEditCategory = (category: Category) => {
-    setEditingCategory(category);
+  const handleEditRole = (role: Role) => {
+    // setEditingCategory(role);
     setFormData({
-      name: category.name,
-      slug: category.slug,
-      description: category.description,
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      permissions: [],
     });
     setIsEditDialogOpen(true);
   };
@@ -135,7 +151,35 @@ export default function CategoriesPage() {
     // setCategories(roles.filter((cat) => cat.id !== category.id));
     // setDeleteCategory(null);
   };
-
+  const initData = [
+    {
+      id: 1,
+      name: "admin",
+      description: "Tạo bài viết",
+    },
+    {
+      id: 2,
+      name: "user",
+      description: "Sửa bài viết",
+    },
+    {
+      id: 3,
+      name: "studio",
+      description: "Xóa người dùng",
+    },
+    {
+      id: 4,
+      name: "view_report",
+      description: "Xem báo cáo",
+    },
+  ];
+  const selectData = [
+    {
+      id: 4,
+      name: "view_report",
+      description: "Xem báo cáo",
+    },
+  ];
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -150,26 +194,23 @@ export default function CategoriesPage() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Thêm danh mục
+              Thêm vai trò
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Thêm danh mục mới</DialogTitle>
-              <DialogDescription>
-                Tạo danh mục mới cho blog của bạn
-              </DialogDescription>
+              <DialogTitle>Thêm vai trò mới</DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="space-y-2">
-                <label htmlFor="name">Tên danh mục</label>
-                <Input
-                  id="name"
-                  placeholder="Nhập tên danh mục..."
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                />
-              </div>
+            <div className="space-y-2">
+              <label htmlFor="name">Tên vai trò</label>
+              <Input
+                id="name"
+                placeholder="Nhập tên vai trò..."
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+              />
+              <label htmlFor="name">Permission</label>
+              <ChipSelect data={initData} selectData={selectData}></ChipSelect>
             </div>
             <DialogFooter>
               <Button
@@ -192,35 +233,31 @@ export default function CategoriesPage() {
       {/* Categories List */}
       <Card>
         <CardHeader>
-          <CardTitle>Danh sách role</CardTitle>
+          <CardTitle>Danh sách quyền</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Tên quyền</TableHead>
-                  <TableHead>Các quyền</TableHead>
+                  <TableHead className="w-[200px]">Tên quyền</TableHead>
+                  <TableHead className="w-[400px]">Các permission</TableHead>
                   <TableHead>Mô tả</TableHead>
-                  <TableHead>Hành động</TableHead>
-                  {/* <TableHead className="w-[70px]"></TableHead> */}
+                  <TableHead className="w-[200px]">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {roles.map((role) => (
+                {roles?.map((role) => (
                   <TableRow key={role.id}>
                     <TableCell>
                       <div className="font-medium">{role.name}</div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="flex gap-1 items-center flex-wrap">
                       {role.permissions.map((permission) => {
                         return (
-                          <code
-                            key={permission.id}
-                            className="text-sm bg-muted px-2 py-1 rounded"
-                          >
+                          <ChipItem key={permission.id}>
                             {permission.name}
-                          </code>
+                          </ChipItem>
                         );
                       })}
                     </TableCell>
@@ -229,33 +266,54 @@ export default function CategoriesPage() {
                         {role.description}
                       </div>
                     </TableCell>
-                    {/* <TableCell></TableCell> */}
-                    {/* <TableCell>{formatDate(category.createdAt)}</TableCell> */}
                     <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Mở menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => {}}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Chỉnh sửa
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => {}}
-                            // disabled={category.postCount > 0}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Xóa
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button
+                        onClick={() => {
+                          handleEditRole(role);
+                          setIsEditDialogOpen(true);
+                        }}
+                        className="mr-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        Chỉnh sửa
+                      </Button>
+                      <Button variant={"destructive"}>
+                        <Trash2 className="h-4 w-4" />
+                        Xóa
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+      {/* Permission */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Permission</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Tên Permission</TableHead>
+                  <TableHead>Mô tả</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {permissions?.map((permission) => (
+                  <TableRow key={permission.id}>
+                    <TableCell>
+                      <div className="font-medium">{permission.name}</div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="max-w-[200px] truncate text-muted-foreground">
+                        {permission.description}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -267,30 +325,23 @@ export default function CategoriesPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="">
           <DialogHeader>
             <DialogTitle>Chỉnh sửa danh mục</DialogTitle>
-            <DialogDescription>Cập nhật thông tin danh mục</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <label htmlFor="edit-name">Tên danh mục</label>
-              <Input
-                id="edit-name"
-                placeholder="Nhập tên danh mục..."
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              {/* <Label htmlFor="edit-slug">Slug</Label> */}
-              <Input
-                id="edit-slug"
-                placeholder="url-danh-muc"
-                value={formData.slug}
-                onChange={(e) => handleInputChange("slug", e.target.value)}
-              />
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="name">Tên vai trò</label>
+            <Input
+              id="name"
+              placeholder="Nhập tên vai trò..."
+              value={formData.name}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+            />
+            <label htmlFor="name">Permission</label>
+            <ChipSelect
+              data={initData}
+              selectData={formData.permissions}
+            ></ChipSelect>
           </div>
           <DialogFooter>
             <Button

@@ -1,5 +1,5 @@
 import type { BlogPost, Category } from "@/types/blogPost";
-import type { Role } from "@/types/role";
+import type { Permission, Role } from "@/types/role";
 
 export const mockRoles: Role[] = [
   {
@@ -9,7 +9,17 @@ export const mockRoles: Role[] = [
     permissions: [
       {
         id: 1,
-        name: "create-user",
+        name: "admin",
+        description: "Tạo người dùng",
+      },
+      {
+        id: 2,
+        name: "studio",
+        description: "Tạo người dùng",
+      },
+      {
+        id: 3,
+        name: "user",
         description: "Tạo người dùng",
       },
     ],
@@ -21,10 +31,45 @@ export const mockRoles: Role[] = [
     permissions: [
       {
         id: 2,
-        name: "create-user",
+        name: "studio",
+        description: "Tạo người dùng",
+      },
+      {
+        id: 3,
+        name: "user",
         description: "Tạo người dùng",
       },
     ],
+  },
+  {
+    id: 3,
+    name: "User",
+    description: "Có thế xem template",
+    permissions: [
+      {
+        id: 3,
+        name: "user",
+        description: "Tạo người dùng",
+      },
+    ],
+  },
+];
+
+export const mockPermissions: Permission[] = [
+  {
+    id: 1,
+    name: "admin",
+    description: "Có quyền quản trị hệ thống",
+  },
+  {
+    id: 2,
+    name: "studio",
+    description: "Có thế đăng template",
+  },
+  {
+    id: 3,
+    name: "user",
+    description: "Có thế xem template",
   },
 ];
 

@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 import ScriptAdsence from "@/components/ScriptAdsence";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
+import ToastHandler from "./ToastHandler";
 
 const geistSans = Roboto({
   variable: "--font-geist-mondo",
@@ -29,6 +30,7 @@ export default function RootLayout({
         <ScriptAdsence></ScriptAdsence>
       </head>
       <body className={`${geistSans.className} antialiased`}>
+        <ToastHandler></ToastHandler>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

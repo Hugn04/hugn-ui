@@ -82,10 +82,11 @@ export async function middleware(req: NextRequest) {
         }
       } catch (error) {
         console.error("Unexpected error:", error);
-
+        redirectUrl.searchParams.set("error", "403");
         return NextResponse.redirect(redirectUrl);
       }
     }
+    redirectUrl.searchParams.set("error", "401");
     return NextResponse.redirect(redirectUrl);
   }
 }
