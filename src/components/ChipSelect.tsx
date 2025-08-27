@@ -15,15 +15,16 @@ type BaseRequired = {
 type ChipSelectProps<T extends BaseRequired> = {
   data: T[];
   selectData: T[];
+  onChange?: (data: T[]) => void;
 };
 
 export default function ChipSelect<T extends BaseRequired>({
   data: initData,
   selectData,
+  onChange = () => {},
 }: ChipSelectProps<T>) {
   const [data, setData] = useState(initData);
   const [select, setSelect] = useState<T[]>(selectData);
-  console.log(selectData);
 
   const handleDelete = (deleteItem: T) => {
     const newData = select.filter((item) => item.id !== deleteItem.id);
@@ -31,19 +32,19 @@ export default function ChipSelect<T extends BaseRequired>({
     setSelect(newData);
   };
   useEffect(() => {
+    // lọc những item trong initData mà không có trong selectData
     const result = initData.filter(
       (item) => !selectData.some((s) => s.id === item.id)
     );
     setData(result);
   }, []);
-
+  useEffect(() => {
+    onChange(select);
+  }, [select]);
   const handleSelect = (selectItem: T) => {
     const newData = data.filter((item) => item.id !== selectItem.id);
     setSelect((prev) => [...prev, selectItem]);
     setData(newData);
-    // setSelect((prev) => {
-    //   return [...prev, item];
-    // });
   };
   return (
     <div className="w-full h-full">
@@ -74,7 +75,13 @@ export default function ChipSelect<T extends BaseRequired>({
               <div className="flex gap-2 justify-center items-center flex-wrap">
                 {data.map((item) => {
                   return (
-                    <ChipItem key={item.id} onSelect={() => handleSelect(item)}>
+                    <ChipItem
+                      key={item.id}
+                      onSelect={() => {
+                        onChange(select);
+                        handleSelect(item);
+                      }}
+                    >
                       {item.name}
                     </ChipItem>
                   );

@@ -34,7 +34,7 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import type { Category } from "@/types/blogPost";
 import { Permission, Role } from "@/types/role";
 import axiosClient from "@/utils/requestClient";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import ChipSelect, { ChipItem } from "@/components/ChipSelect";
 
 const fetcher = <T,>(url: string) =>
@@ -43,7 +43,7 @@ const fetcher = <T,>(url: string) =>
 export default function CategoriesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  // const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
   const [formData, setFormData] = useState<Role>({
     id: 0,
@@ -73,8 +73,9 @@ export default function CategoriesPage() {
 
   const resetForm = () => {
     setFormData({
-      id: "",
-      slug: "",
+      id: 0,
+      name: "",
+      permissions: [],
       description: "",
     });
   };
@@ -84,23 +85,9 @@ export default function CategoriesPage() {
       ...prev,
       [field]: value,
     }));
-
-    // Auto-generate slug from name
-    if (field === "name") {
-      const slug = value
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .trim();
-      setFormData((prev) => ({
-        ...prev,
-        slug,
-      }));
-    }
   };
 
-  const handleAddCategory = () => {
+  const handleAddRole = () => {
     // const newCategory: Category = {
     //   id: Date.now().toString(),
     //   name: formData.name,
@@ -120,28 +107,25 @@ export default function CategoriesPage() {
       id: role.id,
       name: role.name,
       description: role.description,
-      permissions: [],
+      permissions: role.permissions,
     });
     setIsEditDialogOpen(true);
   };
 
-  const handleUpdateCategory = () => {
-    if (editingCategory) {
-      // setCategories(
-      //   roles.map((cat) =>
-      //     cat.id === editingCategory.id
-      //       ? {
-      //           ...cat,
-      //           name: formData.name,
-      //           slug: formData.slug,
-      //           description: formData.description,
-      //         }
-      //       : cat
-      //   )
-      // );
-      // resetForm();
-      // setIsEditDialogOpen(false);
-      // setEditingCategory(null);
+  const handleUpdateRole = async () => {
+    try {
+      await axiosClient.put(`/admin/role/${formData.id}`, formData);
+      mutate(
+        // Lọc ra tất cả key bắt đầu bằng "/assets"
+        (key) => {
+          return typeof key === "string" && key.startsWith("/admin/role");
+        },
+        undefined, // để re-fetch toàn bộ các key match
+        true // revalidate
+      );
+      resetForm();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -151,35 +135,6 @@ export default function CategoriesPage() {
     // setCategories(roles.filter((cat) => cat.id !== category.id));
     // setDeleteCategory(null);
   };
-  const initData = [
-    {
-      id: 1,
-      name: "admin",
-      description: "Tạo bài viết",
-    },
-    {
-      id: 2,
-      name: "user",
-      description: "Sửa bài viết",
-    },
-    {
-      id: 3,
-      name: "studio",
-      description: "Xóa người dùng",
-    },
-    {
-      id: 4,
-      name: "view_report",
-      description: "Xem báo cáo",
-    },
-  ];
-  const selectData = [
-    {
-      id: 4,
-      name: "view_report",
-      description: "Xem báo cáo",
-    },
-  ];
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -210,7 +165,13 @@ export default function CategoriesPage() {
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
               <label htmlFor="name">Permission</label>
-              <ChipSelect data={initData} selectData={selectData}></ChipSelect>
+              <ChipSelect
+                data={permissions || []}
+                selectData={[]}
+                onChange={(data) => {
+                  console.log(data);
+                }}
+              ></ChipSelect>
             </div>
             <DialogFooter>
               <Button
@@ -219,11 +180,8 @@ export default function CategoriesPage() {
               >
                 Hủy
               </Button>
-              <Button
-                onClick={handleAddCategory}
-                disabled={!formData.name.trim()}
-              >
-                Thêm danh mục
+              <Button onClick={handleAddRole} disabled={!formData.name.trim()}>
+                Thêm quyền
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -252,14 +210,16 @@ export default function CategoriesPage() {
                     <TableCell>
                       <div className="font-medium">{role.name}</div>
                     </TableCell>
-                    <TableCell className="flex gap-1 items-center flex-wrap">
-                      {role.permissions.map((permission) => {
-                        return (
-                          <ChipItem key={permission.id}>
-                            {permission.name}
-                          </ChipItem>
-                        );
-                      })}
+                    <TableCell>
+                      <div className="flex gap-1 items-center flex-wrap">
+                        {role.permissions.map((permission) => {
+                          return (
+                            <ChipItem key={permission.id}>
+                              {permission.name}
+                            </ChipItem>
+                          );
+                        })}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="max-w-[200px] truncate text-muted-foreground">
@@ -339,8 +299,11 @@ export default function CategoriesPage() {
             />
             <label htmlFor="name">Permission</label>
             <ChipSelect
-              data={initData}
+              data={permissions || []}
               selectData={formData.permissions}
+              onChange={(data) => {
+                setFormData((prev) => ({ ...prev, permissions: data }));
+              }}
             ></ChipSelect>
           </div>
           <DialogFooter>
@@ -349,15 +312,12 @@ export default function CategoriesPage() {
               onClick={() => {
                 setIsEditDialogOpen(false);
                 resetForm();
-                setEditingCategory(null);
+                // setEditingCategory(null);
               }}
             >
               Hủy
             </Button>
-            <Button
-              onClick={handleUpdateCategory}
-              disabled={!formData.name.trim()}
-            >
+            <Button onClick={handleUpdateRole} disabled={!formData.name.trim()}>
               Cập nhật
             </Button>
           </DialogFooter>

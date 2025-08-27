@@ -38,6 +38,7 @@ export default function InfoUser({ menu: initMenu = [], side }: UserInfoProps) {
         try {
           await axiosClient.post("/logout");
           logout();
+          router.push("login");
         } catch (error) {
           console.error(error);
         }
