@@ -89,7 +89,7 @@ const AssetLibrary: React.FC<AssetLibraryProps> = ({
   }, [assets?.totalPages]);
 
   return (
-    <div className="flex flex-col w-full h-full px-4 py-2">
+    <div className="flex flex-col w-full h-full">
       <div className="flex items-center justify-between pb-2 mb-4 border-b-2">
         <input
           type="text"

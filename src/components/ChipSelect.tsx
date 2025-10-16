@@ -37,10 +37,10 @@ export default function ChipSelect<T extends BaseRequired>({
       (item) => !selectData.some((s) => s.id === item.id)
     );
     setData(result);
-  }, []);
+  }, [initData, selectData]);
   useEffect(() => {
     onChange(select);
-  }, [select]);
+  }, [onChange, select]);
   const handleSelect = (selectItem: T) => {
     const newData = data.filter((item) => item.id !== selectItem.id);
     setSelect((prev) => [...prev, selectItem]);

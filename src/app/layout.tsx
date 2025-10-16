@@ -6,6 +6,7 @@ import ScriptAdsence from "@/components/ScriptAdsence";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ToastHandler from "./ToastHandler";
+import { Suspense } from "react";
 
 const geistSans = Roboto({
   variable: "--font-geist-mondo",
@@ -30,7 +31,9 @@ export default function RootLayout({
         <ScriptAdsence></ScriptAdsence>
       </head>
       <body className={`${geistSans.className} antialiased`}>
-        <ToastHandler></ToastHandler>
+        <Suspense>
+          <ToastHandler></ToastHandler>
+        </Suspense>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

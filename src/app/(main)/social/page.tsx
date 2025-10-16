@@ -131,6 +131,7 @@ const BlogApp: React.FC = () => {
   useEffect(() => {
     setPosts(mockPosts);
     setComments(mockComments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLike = (postId: string) => {

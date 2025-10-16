@@ -10,13 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Breadcrumbs } from "@/components/Admin/breadcrumbs";
-import {
-  LayoutDashboard,
-  FileText,
-  FolderOpen,
-  Settings,
-  Menu,
-} from "lucide-react";
+import { LayoutDashboard, Menu, UserLock, User, Library } from "lucide-react";
 import InfoUser from "@/components/InfoUser";
 import { ModeToggle } from "@/components/ModeToggle";
 
@@ -27,19 +21,19 @@ const sidebarItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Bài viết",
+    title: "Người dùng",
+    href: "/admin/user",
+    icon: User,
+  },
+  {
+    title: "Quyền hạn",
     href: "/admin/role",
-    icon: FileText,
+    icon: UserLock,
   },
   {
-    title: "Danh mục",
-    href: "/admin/categories",
-    icon: FolderOpen,
-  },
-  {
-    title: "Cài đặt",
-    href: "/admin/settings",
-    icon: Settings,
+    title: "Thư viện",
+    href: "/admin/library",
+    icon: Library,
   },
 ];
 
@@ -147,9 +141,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4">
           <Breadcrumbs />
-          {children}
+          <div className="h-[calc(100%-28px)]">{children}</div>
         </main>
       </div>
     </div>

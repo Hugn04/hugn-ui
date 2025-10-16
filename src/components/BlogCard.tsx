@@ -1,4 +1,4 @@
-import { blogPost } from "@/types/blogPost";
+import { BlogPost } from "@/types/blogPost";
 // import Image from "next/image";
 import Link from "next/link";
 
@@ -7,7 +7,7 @@ export default function BlogCard({
   featured = false,
   delay = 0,
 }: {
-  post: blogPost;
+  post: BlogPost;
   featured: boolean;
   delay: number;
 }) {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { useEditorState, type Editor } from "@tiptap/react";
 import { Button } from "../ui/button";
 import {
@@ -235,7 +235,6 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
         </Button>
         <Button
           onClick={() => {
-            console.log(editor.isActive({ textAlign: "right" }));
             editor.chain().focus().setTextAlign("right").run();
           }}
           variant={editorState.isRight ? "active" : "unactive"}
@@ -258,13 +257,15 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
           >
             <DialogTitle>Asset Library</DialogTitle>
             <div className="h-full overflow-hidden">
-              <AssetLibrary
-                numberColumns={5}
-                onSelect={(asset) => {
-                  addImage(asset.url);
-                  setAssetOpen(false);
-                }}
-              />
+              <Suspense>
+                <AssetLibrary
+                  numberColumns={5}
+                  onSelect={(asset) => {
+                    addImage(asset.url);
+                    setAssetOpen(false);
+                  }}
+                />
+              </Suspense>
             </div>
           </DialogContent>
         </Dialog>
@@ -282,8 +283,6 @@ export default function MenuEditer({ editor }: { editor: Editor }) {
                   alt?: string;
                 };
                 if (imageSizeRef.current) {
-                  console.log(image.width);
-
                   imageSizeRef.current.value = image.width.toString();
                 }
               }}

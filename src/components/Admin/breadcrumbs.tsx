@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home, User2 } from "lucide-react";
 
 export function Breadcrumbs() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  const breadcrumbItems = [{ label: "Admin", href: "/admin", icon: Home }];
+  const breadcrumbItems = [{ label: "Admin", href: "/admin", icon: User2 }];
 
   // Build breadcrumb items based on current path
   let currentPath = "";
@@ -49,7 +49,7 @@ export function Breadcrumbs() {
   if (breadcrumbItems.length <= 1) return null;
 
   return (
-    <nav className="flex items-center space-x-1 text-sm text-muted-foreground mb-4">
+    <nav className="flex items-center space-x-1 text-sm text-muted-foreground mb-2">
       {breadcrumbItems.map((item, index) => {
         const isLast = index === breadcrumbItems.length - 1;
         const Icon = item.icon;

@@ -31,11 +31,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Plus, Edit, Trash2 } from "lucide-react";
-import type { Category } from "@/types/blogPost";
 import { Permission, Role } from "@/types/role";
 import axiosClient from "@/utils/requestClient";
 import useSWR, { mutate } from "swr";
 import ChipSelect, { ChipItem } from "@/components/ChipSelect";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 const fetcher = <T,>(url: string) =>
   axiosClient.get<T>(url).then((res) => res.data);
@@ -44,7 +45,7 @@ export default function CategoriesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   // const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
+  const [deleteRole, setDeleteRole] = useState<Role | null>(null);
   const [formData, setFormData] = useState<Role>({
     id: 0,
     name: "",
@@ -87,22 +88,25 @@ export default function CategoriesPage() {
     }));
   };
 
-  const handleAddRole = () => {
-    // const newCategory: Category = {
-    //   id: Date.now().toString(),
-    //   name: formData.name,
-    //   slug: formData.slug,
-    //   description: formData.description,
-    //   postCount: 0,
-    //   createdAt: new Date().toISOString(),
-    // };
-    // setCategories([...roles, newCategory]);
-    // resetForm();
-    // setIsAddDialogOpen(false);
+  const handleAddRole = async () => {
+    try {
+      await axiosClient.post(`/admin/role/add`, formData);
+      mutate(
+        // Lọc ra tất cả key bắt đầu bằng "/admin/role"
+        (key) => {
+          return typeof key === "string" && key.startsWith("/admin/role");
+        },
+        undefined, // để re-fetch toàn bộ các key match
+        true // revalidate
+      );
+      setIsAddDialogOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Thêm nhật vai trò thất bại. Vui lòng thử lại.");
+    }
   };
 
   const handleEditRole = (role: Role) => {
-    // setEditingCategory(role);
     setFormData({
       id: role.id,
       name: role.name,
@@ -116,24 +120,36 @@ export default function CategoriesPage() {
     try {
       await axiosClient.put(`/admin/role/${formData.id}`, formData);
       mutate(
-        // Lọc ra tất cả key bắt đầu bằng "/assets"
+        // Lọc ra tất cả key bắt đầu bằng "/admin/role"
         (key) => {
           return typeof key === "string" && key.startsWith("/admin/role");
         },
         undefined, // để re-fetch toàn bộ các key match
         true // revalidate
       );
-      resetForm();
+      setIsEditDialogOpen(false);
     } catch (error) {
       console.log(error);
+      toast.error("Cập nhật vai trò thất bại. Vui lòng thử lại.");
     }
   };
 
-  const handleDeleteCategory = (category: Category) => {
-    console.log(category);
-
-    // setCategories(roles.filter((cat) => cat.id !== category.id));
-    // setDeleteCategory(null);
+  const handleDeleteRole = async (role: Role) => {
+    try {
+      await axiosClient.delete(`/admin/role/${role.id}`);
+      mutate(
+        // Lọc ra tất cả key bắt đầu bằng "/admin/role"
+        (key) => {
+          return typeof key === "string" && key.startsWith("/admin/role");
+        },
+        undefined, // để re-fetch toàn bộ các key match
+        true // revalidate
+      );
+      setIsEditDialogOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Cập nhật vai trò thất bại. Vui lòng thử lại.");
+    }
   };
   return (
     <div className="space-y-6">
@@ -145,7 +161,13 @@ export default function CategoriesPage() {
             Tạo và quản lý các quyền cho người dùng của bạn
           </p>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <Dialog
+          open={isAddDialogOpen}
+          onOpenChange={(b: boolean) => {
+            setIsAddDialogOpen(b);
+            resetForm();
+          }}
+        >
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -164,12 +186,21 @@ export default function CategoriesPage() {
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
+              <label htmlFor="name">Mô tả</label>
+              <Textarea
+                id="name"
+                placeholder="Nhập tên vai trò..."
+                value={formData.description}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
+              />
               <label htmlFor="name">Permission</label>
               <ChipSelect
                 data={permissions || []}
                 selectData={[]}
                 onChange={(data) => {
-                  console.log(data);
+                  setFormData((prev) => ({ ...prev, permissions: data }));
                 }}
               ></ChipSelect>
             </div>
@@ -237,7 +268,12 @@ export default function CategoriesPage() {
                         <Edit className="h-4 w-4" />
                         Chỉnh sửa
                       </Button>
-                      <Button variant={"destructive"}>
+                      <Button
+                        onClick={() => {
+                          setDeleteRole(role);
+                        }}
+                        variant={"destructive"}
+                      >
                         <Trash2 className="h-4 w-4" />
                         Xóa
                       </Button>
@@ -284,7 +320,13 @@ export default function CategoriesPage() {
       </Card>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog
+        open={isEditDialogOpen}
+        onOpenChange={(b: boolean) => {
+          setIsEditDialogOpen(b);
+          resetForm();
+        }}
+      >
         <DialogContent className="">
           <DialogHeader>
             <DialogTitle>Chỉnh sửa danh mục</DialogTitle>
@@ -296,6 +338,13 @@ export default function CategoriesPage() {
               placeholder="Nhập tên vai trò..."
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
+            />
+            <label htmlFor="name">Mô tả</label>
+            <Textarea
+              id="name"
+              placeholder="Nhập tên vai trò..."
+              value={formData.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
             />
             <label htmlFor="name">Permission</label>
             <ChipSelect
@@ -325,34 +374,28 @@ export default function CategoriesPage() {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={!!deleteCategory}
-        onOpenChange={() => setDeleteCategory(null)}
-      >
+      <AlertDialog open={!!deleteRole} onOpenChange={() => setDeleteRole(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Xác nhận xóa danh mục</AlertDialogTitle>
-            <AlertDialogDescription>
-              Bạn có chắc chắn muốn xóa danh mục {deleteCategory?.name}? Hành
-              động này không thể hoàn tác.
-              {deleteCategory?.postCount && deleteCategory.postCount > 0 && (
-                <div className="mt-2 p-2 bg-destructive/10 text-destructive text-sm rounded">
-                  Không thể xóa danh mục này vì còn {deleteCategory.postCount}{" "}
-                  bài viết.
-                </div>
-              )}
+            <AlertDialogTitle>Xác nhận xóa vai trò</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div>
+                Bạn có chắc chắn muốn xóa vai trò {deleteRole?.name}? Hành động
+                này không thể hoàn tác.
+                {deleteRole?.id && deleteRole.id === 1 && (
+                  <div className="mt-2 p-2 bg-destructive/10 text-destructive text-sm rounded">
+                    Không thể xóa vai trò.
+                  </div>
+                )}
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() =>
-                deleteCategory && handleDeleteCategory(deleteCategory)
-              }
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              disabled={
-                !!(deleteCategory?.postCount && deleteCategory.postCount > 0)
-              }
+              onClick={() => deleteRole && handleDeleteRole(deleteRole)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-white]"
+              disabled={!!(deleteRole?.id && deleteRole.id === 1)}
             >
               Xóa
             </AlertDialogAction>

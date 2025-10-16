@@ -39,9 +39,7 @@ interface BlogPost {
 }
 
 interface BlogDetailPageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 // Fake API call - replace with your actual API
@@ -88,10 +86,9 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
   return mockPost;
 }
 
-async function getRelatedPosts(
-  categorySlug: string,
-  currentSlug: string
-): Promise<BlogPost[]> {
+async function getRelatedPosts(): Promise<BlogPost[]> {
+  // categorySlug: string,
+  // currentSlug: string
   // Mock related posts
   return [
     {
@@ -116,7 +113,8 @@ async function getRelatedPosts(
 export async function generateMetadata({
   params,
 }: BlogDetailPageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   // post = { content: localStorage.getItem("data") || "", ...post };
 
@@ -141,7 +139,7 @@ export async function generateMetadata({
     openGraph: {
       title: seo.metaTitle || title,
       description: seo.metaDescription || excerpt,
-      url: seo.canonicalUrl || `https://yourblog.com/blog/${params.slug}`,
+      url: seo.canonicalUrl || `https://yourblog.com/blog/${slug}`,
       siteName: "Your Blog Name",
       type: "article",
       publishedTime: publishedAt,
@@ -170,7 +168,7 @@ export async function generateMetadata({
 
     // Additional SEO
     alternates: {
-      canonical: seo.canonicalUrl || `https://yourblog.com/blog/${params.slug}`,
+      canonical: seo.canonicalUrl || `https://yourblog.com/blog/${slug}`,
     },
 
     // Robots
@@ -325,13 +323,14 @@ function RelatedPosts({ posts }: { posts: BlogPost[] }) {
 
 // Main Blog Detail Component
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = await getRelatedPosts(post.category.slug, post.slug);
+  const relatedPosts = await getRelatedPosts();
   {
     // console.log(post.content);
   }

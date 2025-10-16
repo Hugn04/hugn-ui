@@ -1,19 +1,19 @@
 export interface BlogPost {
-  id: string;
+  id: number;
   title: string;
-  slug: string;
-  content: string;
   excerpt: string;
-  status: "draft" | "published" | "archived";
+  slug?: string;
+  content: string;
+  author: string;
+  authorImage: string;
+  publishDate: string;
+  readTime: string;
   category: string;
   tags: string[];
-  author: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt?: string;
-  featuredImage?: string;
-  readTime: number;
+  image: string;
+  featured: boolean;
   views: number;
+  likes: number;
 }
 
 export interface Category {

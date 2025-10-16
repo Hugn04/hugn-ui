@@ -29,6 +29,7 @@ type UserInfoProps = {
 export default function InfoUser({ menu: initMenu = [], side }: UserInfoProps) {
   const router = useRouter();
   const { user, login, logout } = useAuth();
+
   const menu = [
     ...initMenu,
     {
@@ -58,7 +59,7 @@ export default function InfoUser({ menu: initMenu = [], side }: UserInfoProps) {
     if (!user) {
       fetchUser();
     }
-  }, []);
+  }, [login, user]);
   return (
     <div className="flex items-center h-12">
       {user ? (
