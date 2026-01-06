@@ -21,7 +21,7 @@ type ChipSelectProps<T extends BaseRequired> = {
 export default function ChipSelect<T extends BaseRequired>({
   data: initData,
   selectData,
-  onChange = () => {},
+  onChange,
 }: ChipSelectProps<T>) {
   const [data, setData] = useState(initData);
   const [select, setSelect] = useState<T[]>(selectData);
@@ -37,10 +37,10 @@ export default function ChipSelect<T extends BaseRequired>({
       (item) => !selectData.some((s) => s.id === item.id)
     );
     setData(result);
-  }, [initData, selectData]);
+  }, [initData]);
   useEffect(() => {
-    onChange(select);
-  }, [onChange, select]);
+    if (onChange) onChange(select);
+  }, [select]);
   const handleSelect = (selectItem: T) => {
     const newData = data.filter((item) => item.id !== selectItem.id);
     setSelect((prev) => [...prev, selectItem]);
@@ -78,7 +78,7 @@ export default function ChipSelect<T extends BaseRequired>({
                     <ChipItem
                       key={item.id}
                       onSelect={() => {
-                        onChange(select);
+                        if (onChange) onChange(select);
                         handleSelect(item);
                       }}
                     >

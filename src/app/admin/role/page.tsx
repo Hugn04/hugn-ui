@@ -53,15 +53,14 @@ export default function CategoriesPage() {
     permissions: [],
   });
 
-  const {
-    data: permissions,
-    // isLoading,
-    // error,
-  } = useSWR<Permission[]>("/admin/permissions", (url) => fetcher(url), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    dedupingInterval: 60000, // 1 phút mới gọi lại
-  });
+  const { data: permissions } = useSWR<Permission[]>(
+    "/admin/permissions",
+    (url) => fetcher(url),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   const {
     data: roles,
     // isLoading,
@@ -69,7 +68,6 @@ export default function CategoriesPage() {
   } = useSWR<Role[]>("/admin/role", (url) => fetcher(url), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    dedupingInterval: 60000, // 1 phút mới gọi lại
   });
 
   const resetForm = () => {
@@ -261,7 +259,7 @@ export default function CategoriesPage() {
                       <Button
                         onClick={() => {
                           handleEditRole(role);
-                          setIsEditDialogOpen(true);
+                          // setIsEditDialogOpen(true);
                         }}
                         className="mr-2"
                       >
