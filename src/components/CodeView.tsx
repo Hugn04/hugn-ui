@@ -17,7 +17,7 @@ export default function CodeView({
     <Editor
       className="h-full"
       defaultLanguage={language}
-      defaultValue={code}
+      value={code}
       theme={theme === "light" ? "light" : "vs-dark"}
       options={{
         readOnly: readonly,

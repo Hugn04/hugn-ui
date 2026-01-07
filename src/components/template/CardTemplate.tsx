@@ -10,23 +10,31 @@ import {
 import Image from "next/image";
 import { Heart, ThumbsUp } from "lucide-react";
 import { Button } from "../ui/button";
-export default function CardTemplate() {
+import { Template } from "@/types/template";
+type CardTemplateProps = {
+  template: Template;
+  onPreview: (id: number) => void;
+  previewId?: number | null;
+};
+export default function CardTemplate({
+  template,
+  onPreview,
+  previewId,
+}: CardTemplateProps) {
+  const { id, name, description, image } = template;
   return (
     <div>
       <Card className="w-[300px] h-auto">
         <CardHeader>
-          <CardTitle>Web bán hàng điện tử</CardTitle>
+          <CardTitle>{name}</CardTitle>
           <Image
             className="object-cover"
-            src={"/assets/images/image.png"}
+            src={image ? "/" + image : "/assets/images/image.png"}
             width={245}
             height={300}
             alt=""
           ></Image>
-          <CardDescription>
-            Giao diện website hiện đại, tối ưu trải nghiệm mua sắm sản phẩm điện
-            tử như điện thoại, laptop, phụ kiện.
-          </CardDescription>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between">
@@ -44,7 +52,14 @@ export default function CardTemplate() {
         <CardFooter>
           <div className="flex w-full justify-between">
             <Button>Xem thêm</Button>
-            <Button>Xem trước</Button>
+            <Button
+              disabled={id === previewId}
+              onClick={() => {
+                onPreview(id);
+              }}
+            >
+              Xem trước
+            </Button>
           </div>
         </CardFooter>
       </Card>

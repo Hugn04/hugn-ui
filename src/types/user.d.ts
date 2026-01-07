@@ -1,10 +1,13 @@
 import { Role } from "./role";
 
-export interface User {
+export interface BaseUser {
+  username: string;
   avatarUrl: string;
+  id: number;
+}
+
+export interface User extends BaseUser {
   createdAt: string;
   email: string;
-  id: number;
   roles: Role[];
-  username: string;
 }

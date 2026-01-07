@@ -78,7 +78,7 @@ export default function PreviewTemplate({
   return (
     <div
       ref={divRef}
-      className="flex w-full h-full items-center flex-col justify-center"
+      className="flex w-full  h-full items-center flex-col justify-center"
     >
       <div
         style={{ width: size.width, height: size.height }}
@@ -86,6 +86,7 @@ export default function PreviewTemplate({
       >
         <iframe
           style={{
+            background: "white",
             width: `${realSize.width}px`,
             height: `${realSize.height}px`,
             transform: `scale(${size.scale})`,
