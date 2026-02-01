@@ -1,12 +1,12 @@
 import BlogCard from "@/components/BlogCard";
 import BlogCategories from "@/components/BlogCategories";
 // import BlogHero from "@/components/BlogHero";
-import { blogPost } from "@/types/blogPost";
+import type { BlogPost } from "@/types/blogPost";
 import { Categories } from "@/types/categories";
 import Link from "next/link";
 
 // Sample blog data - trong thực tế sẽ fetch từ API hoặc CMS
-const blogPosts: blogPost[] = [
+const blogPosts: BlogPost[] = [
   {
     id: 1,
     title: "10 Xu hướng thiết kế Web năm 2025",
@@ -92,91 +92,6 @@ const blogPosts: blogPost[] = [
     views: 1890,
     likes: 134,
   },
-  {
-    id: 6,
-    title: "Performance Optimization cho React Apps",
-    excerpt:
-      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
-    content: "Performance là yếu tố quyết định thành công của web app...",
-    author: "Minh Hoàng",
-    authorImage: "/assets/images/author1.jpg",
-    publishDate: "2025-01-03",
-    readTime: "14 phút đọc",
-    category: "Performance",
-    tags: ["React", "Performance", "Optimization", "Web Vitals"],
-    image: "/assets/images/blog6.jpg",
-    featured: false,
-    views: 1340,
-    likes: 98,
-  },
-  {
-    id: 7,
-    title: "Performance Optimization cho React Apps",
-    excerpt:
-      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
-    content: "Performance là yếu tố quyết định thành công của web app...",
-    author: "Minh Hoàng",
-    authorImage: "/assets/images/author1.jpg",
-    publishDate: "2025-01-03",
-    readTime: "14 phút đọc",
-    category: "Performance",
-    tags: ["React", "Performance", "Optimization", "Web Vitals"],
-    image: "/assets/images/blog6.jpg",
-    featured: false,
-    views: 1340,
-    likes: 98,
-  },
-  {
-    id: 8,
-    title: "Performance Optimization cho React Apps",
-    excerpt:
-      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
-    content: "Performance là yếu tố quyết định thành công của web app...",
-    author: "Minh Hoàng",
-    authorImage: "/assets/images/author1.jpg",
-    publishDate: "2025-01-03",
-    readTime: "14 phút đọc",
-    category: "Performance",
-    tags: ["React", "Performance", "Optimization", "Web Vitals"],
-    image: "/assets/images/blog6.jpg",
-    featured: false,
-    views: 1340,
-    likes: 98,
-  },
-  {
-    id: 9,
-    title: "Performance Optimization cho React Apps",
-    excerpt:
-      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
-    content: "Performance là yếu tố quyết định thành công của web app...",
-    author: "Minh Hoàng",
-    authorImage: "/assets/images/author1.jpg",
-    publishDate: "2025-01-03",
-    readTime: "14 phút đọc",
-    category: "Performance",
-    tags: ["React", "Performance", "Optimization", "Web Vitals"],
-    image: "/assets/images/blog6.jpg",
-    featured: true,
-    views: 1340,
-    likes: 98,
-  },
-  {
-    id: 10,
-    title: "Performance Optimization cho React Apps",
-    excerpt:
-      "Các kỹ thuật optimization cần thiết để tăng tốc độ loading và hiệu suất của ứng dụng React.",
-    content: "Performance là yếu tố quyết định thành công của web app...",
-    author: "Minh Hoàng",
-    authorImage: "/assets/images/author1.jpg",
-    publishDate: "2025-01-03",
-    readTime: "14 phút đọc",
-    category: "Performance",
-    tags: ["React", "Performance", "Optimization", "Web Vitals"],
-    image: "/assets/images/blog6.jpg",
-    featured: true,
-    views: 1340,
-    likes: 98,
-  },
 ];
 
 const categories: Categories[] = [
@@ -231,7 +146,7 @@ export default function BlogPage() {
               Bài viết mới nhất
             </h2>
             <Link
-              href="/blog/archive"
+              href="/blog/all"
               className="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium flex items-center gap-2 group"
             >
               Xem tất cả

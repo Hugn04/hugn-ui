@@ -3,6 +3,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import ScriptAdsence from "@/components/ScriptAdsence";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ToastHandler from "./ToastHandler";
+import { Suspense } from "react";
 
 const geistSans = Roboto({
   variable: "--font-geist-mondo",
@@ -27,13 +31,17 @@ export default function RootLayout({
         <ScriptAdsence></ScriptAdsence>
       </head>
       <body className={`${geistSans.className} antialiased`}>
+        <Suspense>
+          <ToastHandler></ToastHandler>
+        </Suspense>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <AuthProvider>{children}</AuthProvider>
+          <Toaster></Toaster>
         </ThemeProvider>
       </body>
     </html>

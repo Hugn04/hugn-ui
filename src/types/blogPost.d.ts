@@ -1,7 +1,8 @@
-export type blogPost = {
+export interface BlogPost {
   id: number;
   title: string;
   excerpt: string;
+  slug?: string;
   content: string;
   author: string;
   authorImage: string;
@@ -13,4 +14,13 @@ export type blogPost = {
   featured: boolean;
   views: number;
   likes: number;
-};
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  postCount: number;
+  createdAt: string;
+}

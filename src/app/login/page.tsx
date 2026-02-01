@@ -9,7 +9,8 @@ export default function Login() {
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.type === "SSO") {
-        router.push("/");
+        // const token = event.data.access_tokens;
+        window.location.href = "/";
       }
     });
     // return () => window.removeEventListener("message", onMessage);

@@ -1,13 +1,13 @@
 "use client";
-import { navItem } from "@/types/navItems";
+import { navigationItems } from "@/config/header.config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Navigation({ items }: { items: navItem[] }) {
+export default function Navigation() {
   const pathname = usePathname();
   return (
     <nav className="hidden md:flex space-x-2">
-      {items.map((item) => {
+      {navigationItems.map((item) => {
         const isActive = `/${pathname.split("/")[1]}` === item.href;
         return (
           <Link
