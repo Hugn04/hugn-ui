@@ -28,8 +28,8 @@ export default function CardTemplate({
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <Image
-            className="object-cover"
-            src={image ? "/" + image : "/assets/images/image.png"}
+            className="object-cover w-full"
+            src={image ? image : "/assets/images/image.png"}
             width={245}
             height={300}
             alt=""

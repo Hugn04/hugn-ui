@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Hugn UI — Next.js frontend
 
-## Getting Started
+Overview
 
-First, run the development server:
+This repository contains the `hugn-ui` Next.js frontend for the Hugn project. It provides web and admin interfaces built with Next.js, React and Tailwind/Sass, and includes reusable UI components used across the app.
+
+Quick start
+
+1. Install dependencies:
+
+```bash
+cd hugn-ui
+npm install
+```
+
+2. Run in development:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app is available at http://localhost:3000 by default.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Build and production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `dev` — start Next.js in development
+- `build` — compile the app for production
+- `start` — run the compiled production server
+- `lint` — run ESLint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Environment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project includes `.env`, `.env.development`, and `.env.production` files. Update them with API endpoints, keys, or feature flags required by the app.
 
-## Deploy on Vercel
+Folder structure (important parts)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/app` — Next.js routes, pages and layout
+- `src/components` — UI components (cards, headers, editor, admin widgets)
+- `src/styles` — Sass and global styles
+- `src/contexts` — React context providers (e.g. auth)
+- `src/utils` / `src/lib` — helper utilities and mock data
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Notes
+
+- The project targets Next.js 15 and React 19 (see `package.json`).
+- If the frontend consumes the `hugn-be` API, make sure `hugn-be` is running and `hugn-ui` `.env` variables point to the backend endpoints.
+
+Contributing
+
+1. Fork or branch the repo.
+2. Run `npm run dev` and implement changes.
+3. Open a pull request with a concise description of the change.
+
+License
+
+See `package.json` for license metadata.

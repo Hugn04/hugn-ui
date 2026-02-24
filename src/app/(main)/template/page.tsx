@@ -42,6 +42,7 @@ export default function TemplatePage() {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [keyword, setKeyword] = useState("");
   const [size, setSize] = useState([70, 30]);
+  const [viewMode, setViewMode] = useState<"view" | "code">("view");
   const loadData = async (pageNumber: number) => {
     if (loading) return;
     setLoading(true);
@@ -51,7 +52,7 @@ export default function TemplatePage() {
       });
 
       setTemplates((prev) =>
-        pageNumber === 1 ? data.data : [...prev, ...data.data]
+        pageNumber === 1 ? data.data : [...prev, ...data.data],
       );
 
       setPagination(data);
@@ -65,7 +66,7 @@ export default function TemplatePage() {
     const fetchData = async () => {
       try {
         const { data } = await axiosClient.get<{ html: string }>(
-          `/template/${previewId}`
+          `/template/${previewId}`,
         );
         setCode(data.html);
       } catch (error) {
@@ -90,7 +91,7 @@ export default function TemplatePage() {
       },
       {
         rootMargin: "500px",
-      }
+      },
     );
 
     observer.observe(loadMoreRef.current);
@@ -165,16 +166,27 @@ export default function TemplatePage() {
       </ResizablePanel>
       {isOpen && <ResizableHandle withHandle />}
       <ResizablePanel ref={preViewRef} defaultSize={0}>
-        <Tabs style={{ gap: 0 }} defaultValue="view" className="w-full">
-          <div className="flex w-full h-15 border-b-2 items-center justify-between px-4">
-            <Button
-              className="font-semibold"
-              onClick={() => {
-                setIsMobile(!isMobile);
-              }}
-            >
-              Toggle View Mode
-            </Button>
+        <Tabs
+          style={{ gap: 0 }}
+          onValueChange={(e) => {
+            setViewMode(e as "view" | "code");
+          }}
+          defaultValue="view"
+          className="w-full"
+        >
+          <div
+            className={`${viewMode === "code" ? "justify-end" : "justify-between"} flex w-full h-15 border-b-2 items-center px-4`}
+          >
+            {viewMode === "view" && (
+              <Button
+                className="font-semibold"
+                onClick={() => {
+                  setIsMobile(!isMobile);
+                }}
+              >
+                Toggle View Mode
+              </Button>
+            )}
             <TabsList>
               <TabsTrigger value="view">View</TabsTrigger>
               <TabsTrigger value="code">Code</TabsTrigger>
